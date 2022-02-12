@@ -23,7 +23,7 @@ function PlaceCard({
         </div>
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <a href="/">
           <img className="place-card__image" src={placePhoto} width="260" height="200" alt={photoDescription} />
         </a>
       </div>
@@ -47,7 +47,7 @@ function PlaceCard({
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{placeName}</a>
+          <a href="/">{placeName}</a>
         </h2>
         <p className="place-card__type">{placeType}</p>
       </div>
