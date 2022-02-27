@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import PrivateRoute from '../private-route/private-route';
@@ -12,28 +13,17 @@ import PropertyScreen from '../property-screen/property-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 
 type AppProps = {
-  offersCount: number;
   offers: Offers,
 }
 
-// const Goods: string[] = [
-//   'Breakfast',
-//   'Air conditioning',
-//   'Towels',
-//   'Baby seat',
-//   'Washer',
-//   'Laptop friendly workspace',
-//   'Dishwasher',
-//   'Fridge',
-// ];
+function App({ offers }: AppProps): JSX.Element {
 
-function App({ offersCount, offers }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />} >
-          <Route path={AppRoute.Main} element={<MainScreen offersCount={offersCount} offers={offers}/>} />
-          <Route path={AppRoute.Room} element={<PropertyScreen />} />
+          <Route path={AppRoute.Main} element={<MainScreen offers={offers}/>} />
+          <Route path={AppRoute.Room} element={<PropertyScreen offers={offers}/>} />
           <Route path={AppRoute.SignIn} element={<LoginScreen />} />
           <Route
             path={AppRoute.Favorites}

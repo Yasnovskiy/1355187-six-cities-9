@@ -1,16 +1,11 @@
-import {  Offers } from '../../types/offers';
 import PlaceCard from '../place-card/place-card';
+import {  Offers, Offer } from '../../types/offers';
 
 type MainScreenProps = {
-  offersCount: number;
   offers: Offers,
 }
 
-function MainScreen({ offersCount, offers }: MainScreenProps): JSX.Element {
-// eslint-disable-next-line no-console
-  console.log(offers);
-  // eslint-disable-next-line no-console
-  console.log(offers.length);
+function MainScreen({ offers }: MainScreenProps): JSX.Element {
 
   return (
     <div className="page page--gray page--main">
@@ -56,7 +51,7 @@ function MainScreen({ offersCount, offers }: MainScreenProps): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in Amsterdam</b>
+              <b className="places__found">{offers.length} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -77,7 +72,7 @@ function MainScreen({ offersCount, offers }: MainScreenProps): JSX.Element {
                 {offers.map((item) => (
                   <PlaceCard
                     key={item.id}
-                    offer={item as unknown as Offer}
+                    offer={item as Offer}
                   />))}
 
               </div>
