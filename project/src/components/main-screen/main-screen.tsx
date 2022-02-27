@@ -1,10 +1,17 @@
+import {  Offers } from '../../types/offers';
 import PlaceCard from '../place-card/place-card';
 
 type MainScreenProps = {
   offersCount: number;
+  offers: Offers,
 }
 
-function MainScreen({ offersCount }: MainScreenProps): JSX.Element {
+function MainScreen({ offersCount, offers }: MainScreenProps): JSX.Element {
+// eslint-disable-next-line no-console
+  console.log(offers);
+  // eslint-disable-next-line no-console
+  console.log(offers.length);
+
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
@@ -67,47 +74,12 @@ function MainScreen({ offersCount }: MainScreenProps): JSX.Element {
               </form>
               <div className="cities__places-list places__list tabs__content">
 
-                <PlaceCard
-                  isPlacePremium
-                  placePhoto='img/apartment-01.jpg'
-                  photoDescription='Place apartment-01'
-                  placePrice={120}
-                  placeName='Beautiful &amp; luxurious apartment at great location'
-                  placeType='Apartment'
-                />
+                {offers.map((item) => (
+                  <PlaceCard
+                    key={item.id}
+                    offer={item as unknown as Offer}
+                  />))}
 
-                <PlaceCard
-                  placePhoto='img/room.jpg'
-                  photoDescription='Place room'
-                  placePrice={80}
-                  placeName='Wood and stone place'
-                  placeType='Private room'
-                />
-
-                <PlaceCard
-                  placePhoto='img/apartment-02.jpg'
-                  photoDescription='Place apartment-02'
-                  placePrice={132}
-                  placeName='Canal View Prinsengracht'
-                  placeType='Apartment'
-                />
-
-                <PlaceCard
-                  isPlacePremium
-                  placePhoto='img/apartment-03.jpg'
-                  photoDescription='Place apartment-03'
-                  placePrice={180}
-                  placeName='Nice, cozy, warm big bed apartment'
-                  placeType='Private room'
-                />
-
-                <PlaceCard
-                  placePhoto='img/room.jpg'
-                  photoDescription='Place room'
-                  placePrice={80}
-                  placeName='Wood and stone place'
-                  placeType='Private room'
-                />
               </div>
             </section>
             <div className="cities__right-section">

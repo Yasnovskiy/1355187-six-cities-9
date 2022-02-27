@@ -1,29 +1,46 @@
-function PropertyScreen(): JSX.Element {
+import ReviewsFormScreen from '../reviews-form-screen/reviews-form-screen';
+
+type PropertyScreenProps = {
+  images?: string[],
+  good?: string[],
+}
+
+function PropertyScreen(props: PropertyScreenProps): JSX.Element {
+
+  const {images, good} = props;
+
   return (
     <main className="page__main page__main--property">
       <section className="property">
-        <div className="property__gallery-container container">
-          <div className="property__gallery">
-            <div className="property__image-wrapper">
-              <img className="property__image" src="img/room.jpg" alt="Place room" />
-            </div>
-            <div className="property__image-wrapper">
-              <img className="property__image" src="img/apartment-01.jpg" alt="Place apartment-01" />
-            </div>
-            <div className="property__image-wrapper">
-              <img className="property__image" src="img/apartment-02.jpg" alt="Place apartment-02" />
-            </div>
-            <div className="property__image-wrapper">
-              <img className="property__image" src="img/apartment-03.jpg" alt="Place apartment-03" />
-            </div>
-            <div className="property__image-wrapper">
-              <img className="property__image" src="img/studio-01.jpg" alt="Place studio-01" />
-            </div>
-            <div className="property__image-wrapper">
-              <img className="property__image" src="img/apartment-01.jpg" alt="Place apartment-01" />
+        {props.images && (
+          <div className="property__gallery-container container">
+            <div className="property__gallery">
+              {images?.map((item) => (
+                <div key={item} className="property__image-wrapper">
+                  <img className="property__image" src={item} alt="Place room" />
+                </div>
+              ))}
+              {/* <div className="property__image-wrapper">
+                <img className="property__image" src="img/room.jpg" alt="Place room" />
+              </div>
+              <div className="property__image-wrapper">
+                <img className="property__image" src="img/apartment-01.jpg" alt="Place apartment-01" />
+              </div>
+              <div className="property__image-wrapper">
+                <img className="property__image" src="img/apartment-02.jpg" alt="Place apartment-02" />
+              </div>
+              <div className="property__image-wrapper">
+                <img className="property__image" src="img/apartment-03.jpg" alt="Place apartment-03" />
+              </div>
+              <div className="property__image-wrapper">
+                <img className="property__image" src="img/studio-01.jpg" alt="Place studio-01" />
+              </div>
+              <div className="property__image-wrapper">
+                <img className="property__image" src="img/apartment-01.jpg" alt="Place apartment-01" />
+              </div> */}
             </div>
           </div>
-        </div>
+        )}
         <div className="property__container container">
           <div className="property__wrapper">
             <div className="property__mark">
@@ -62,41 +79,48 @@ function PropertyScreen(): JSX.Element {
               <b className="property__price-value">&euro;120</b>
               <span className="property__price-text">&nbsp;night</span>
             </div>
-            <div className="property__inside">
-              <h2 className="property__inside-title">What&apos;s inside</h2>
-              <ul className="property__inside-list">
-                <li className="property__inside-item">
-                  Wi-Fi
-                </li>
-                <li className="property__inside-item">
-                  Washing machine
-                </li>
-                <li className="property__inside-item">
-                  Towels
-                </li>
-                <li className="property__inside-item">
-                  Heating
-                </li>
-                <li className="property__inside-item">
-                  Coffee machine
-                </li>
-                <li className="property__inside-item">
-                  Baby seat
-                </li>
-                <li className="property__inside-item">
-                  Kitchen
-                </li>
-                <li className="property__inside-item">
-                  Dishwasher
-                </li>
-                <li className="property__inside-item">
-                  Cabel TV
-                </li>
-                <li className="property__inside-item">
-                  Fridge
-                </li>
-              </ul>
-            </div>
+            {props.good && (
+              <div className="property__inside">
+                <h2 className="property__inside-title">What&apos;s inside</h2>
+                <ul className="property__inside-list">
+                  {good?.map((item) => (
+                    <li key={item} className="property__inside-item">
+                      {item}
+                    </li>
+                  ))}
+                  {/* <li className="property__inside-item">
+                    Wi-Fi
+                  </li>
+                  <li className="property__inside-item">
+                    Washing machine
+                  </li>
+                  <li className="property__inside-item">
+                    Towels
+                  </li>
+                  <li className="property__inside-item">
+                    Heating
+                  </li>
+                  <li className="property__inside-item">
+                    Coffee machine
+                  </li>
+                  <li className="property__inside-item">
+                    Baby seat
+                  </li>
+                  <li className="property__inside-item">
+                    Kitchen
+                  </li>
+                  <li className="property__inside-item">
+                    Dishwasher
+                  </li>
+                  <li className="property__inside-item">
+                    Cabel TV
+                  </li>
+                  <li className="property__inside-item">
+                    Fridge
+                  </li> */}
+                </ul>
+              </div>
+            )}
             <div className="property__host">
               <h2 className="property__host-title">Meet the host</h2>
               <div className="property__host-user user">
@@ -145,6 +169,7 @@ function PropertyScreen(): JSX.Element {
                   </div>
                 </li>
               </ul>
+              <ReviewsFormScreen></ReviewsFormScreen >
             </section>
           </div>
         </div>
