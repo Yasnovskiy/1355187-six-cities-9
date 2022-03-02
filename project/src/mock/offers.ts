@@ -3,7 +3,7 @@ import { Offers } from '../types/offers';
 export const offers: Offers = [
   {
     city: {
-      name: 'Cologne',
+      name: 'Amsterdam',
       location: {
         latitude: 50.938361,
         longitude: 6.959974,
@@ -57,7 +57,7 @@ export const offers: Offers = [
   },
   {
     city: {
-      name: 'Cologne',
+      name: 'Amsterdam',
       location: {
         latitude: 50.938361,
         longitude: 6.959974,
@@ -115,7 +115,7 @@ export const offers: Offers = [
   },
   {
     city: {
-      name: 'Cologne',
+      name: 'Amsterdam',
       location: {
         latitude: 50.938361,
         longitude: 6.959974,
@@ -167,14 +167,14 @@ export const offers: Offers = [
     description: 'I rent out a very sunny and bright apartment only 7 minutes walking distance to the metro station. The apartment has a spacious living room with a kitchen, one bedroom and a bathroom with mit bath. A terrace can be used in summer.',
     location: {
       latitude: 50.934361,
-      longitude: 6.943974,
+      longitude: 6.933974,
       zoom: 16,
     },
     id: 58,
   },
   {
     city: {
-      name: 'Cologne',
+      name: 'Amsterdam',
       location: {
         latitude: 50.938361,
         longitude: 6.959974,

@@ -1,5 +1,7 @@
-import PlaceCard from '../place-card/place-card';
-import {  Offers, Offer } from '../../types/offers';
+import {  Offers } from '../../types/offers';
+import { useState } from 'react';
+import Map from '../map/map';
+import OffersList from '../offers-list/offers-list';
 
 type MainScreenProps = {
   offers: Offers,
@@ -7,8 +9,13 @@ type MainScreenProps = {
 
 function MainScreen({ offers }: MainScreenProps): JSX.Element {
 
+  const city = offers[0].city.location;
+  const points = offers.map(({ id, location }) => ({ id, location }));
+
+  const [active, setActive] = useState(null as number | null);
+
   return (
-    <div className="page page--gray page--main">
+    <div className={`page page--gray page--main ${active}`} >
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
@@ -67,18 +74,10 @@ function MainScreen({ offers }: MainScreenProps): JSX.Element {
                   <li className="places__option" tabIndex={0}>Top rated first</li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-
-                {offers.map((item) => (
-                  <PlaceCard
-                    key={item.id}
-                    offer={item as Offer}
-                  />))}
-
-              </div>
+              <OffersList offers={offers} setActiveOffer={setActive}/>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map city={city} points={points} selectedPoint={active}/>
             </div>
           </div>
         </div>
