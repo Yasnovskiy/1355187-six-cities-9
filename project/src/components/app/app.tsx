@@ -1,6 +1,9 @@
+/* eslint-disable no-console */
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import PrivateRoute from '../private-route/private-route';
+
+import { Offers } from '../../types/offers';
 
 import Layout from '../layout/layout';
 import MainScreen from '../main-screen/main-screen';
@@ -10,29 +13,18 @@ import PropertyScreen from '../property-screen/property-screen';
 import NotFoundScreen from '../not-found-screen/not-found-screen';
 
 type AppProps = {
-  offersCount: number;
+  offers: Offers,
 }
 
-function App({ offersCount }: AppProps): JSX.Element {
+function App({ offers }: AppProps): JSX.Element {
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />} >
-          <Route
-            path={AppRoute.Main}
-            element={<MainScreen offersCount={offersCount} />}
-          >
-          </Route>
-          <Route
-            path={AppRoute.Room}
-            element={<PropertyScreen />}
-          >
-          </Route>
-          <Route
-            path={AppRoute.SignIn}
-            element={<LoginScreen />}
-          >
-          </Route>
+          <Route path={AppRoute.Main} element={<MainScreen offers={offers}/>} />
+          <Route path={AppRoute.Room} element={<PropertyScreen offers={offers}/>} />
+          <Route path={AppRoute.SignIn} element={<LoginScreen />} />
           <Route
             path={AppRoute.Favorites}
             element={
@@ -45,11 +37,7 @@ function App({ offersCount }: AppProps): JSX.Element {
           >
           </Route>
         </Route>
-        <Route
-          path='*'
-          element={<NotFoundScreen />}
-        >
-        </Route>
+        <Route path='*' element={<NotFoundScreen />} />
       </Routes>
     </BrowserRouter>
   );

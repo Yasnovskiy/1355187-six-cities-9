@@ -1,10 +1,12 @@
 import PlaceCard from '../place-card/place-card';
+import {  Offers, Offer } from '../../types/offers';
 
 type MainScreenProps = {
-  offersCount: number;
+  offers: Offers,
 }
 
-function MainScreen({ offersCount }: MainScreenProps): JSX.Element {
+function MainScreen({ offers }: MainScreenProps): JSX.Element {
+
   return (
     <div className="page page--gray page--main">
       <main className="page__main page__main--index">
@@ -49,7 +51,7 @@ function MainScreen({ offersCount }: MainScreenProps): JSX.Element {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in Amsterdam</b>
+              <b className="places__found">{offers.length} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -67,47 +69,12 @@ function MainScreen({ offersCount }: MainScreenProps): JSX.Element {
               </form>
               <div className="cities__places-list places__list tabs__content">
 
-                <PlaceCard
-                  isPlacePremium
-                  placePhoto='img/apartment-01.jpg'
-                  photoDescription='Place apartment-01'
-                  placePrice={120}
-                  placeName='Beautiful &amp; luxurious apartment at great location'
-                  placeType='Apartment'
-                />
+                {offers.map((item) => (
+                  <PlaceCard
+                    key={item.id}
+                    offer={item as Offer}
+                  />))}
 
-                <PlaceCard
-                  placePhoto='img/room.jpg'
-                  photoDescription='Place room'
-                  placePrice={80}
-                  placeName='Wood and stone place'
-                  placeType='Private room'
-                />
-
-                <PlaceCard
-                  placePhoto='img/apartment-02.jpg'
-                  photoDescription='Place apartment-02'
-                  placePrice={132}
-                  placeName='Canal View Prinsengracht'
-                  placeType='Apartment'
-                />
-
-                <PlaceCard
-                  isPlacePremium
-                  placePhoto='img/apartment-03.jpg'
-                  photoDescription='Place apartment-03'
-                  placePrice={180}
-                  placeName='Nice, cozy, warm big bed apartment'
-                  placeType='Private room'
-                />
-
-                <PlaceCard
-                  placePhoto='img/room.jpg'
-                  photoDescription='Place room'
-                  placePrice={80}
-                  placeName='Wood and stone place'
-                  placeType='Private room'
-                />
               </div>
             </section>
             <div className="cities__right-section">
