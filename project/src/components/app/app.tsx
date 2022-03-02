@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import PrivateRoute from '../private-route/private-route';
@@ -21,8 +20,8 @@ function App({ offers }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Layout />} >
-          <Route path={AppRoute.Main} element={<MainScreen offers={offers}/>} />
+        <Route path={AppRoute.Main} element={<Layout />} >
+          <Route index element={<MainScreen offers={offers}/>} />
           <Route path={AppRoute.Room} element={<PropertyScreen offers={offers}/>} />
           <Route path={AppRoute.SignIn} element={<LoginScreen />} />
           <Route

@@ -1,44 +1,40 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CityOffer } from '../../types/offers';
+import { Offer } from '../../types/offers';
 
 type PlaceCardProps = {
-  id: number,
-  city: CityOffer;
-  previewImage: string;
-  isPremium: boolean;
-  type: string;
-  price: number;
-  description: string;
-  title: string,
-  rating: number,
-  isFavorite: boolean,
-};
+  offer: Pick<Offer, 'isPremium' | 'isFavorite' | 'rating' | 'title' | 'type' | 'description' | 'price' | 'previewImage' | 'id'>,
+  mouseOverHandler: () => void,
+}
 
-function PlaceCard({offer}: {offer: PlaceCardProps}): JSX.Element {
-  const [isFavorite, setIsFavorite] = useState(offer.isFavorite);
+function PlaceCard(props: PlaceCardProps): JSX.Element {
+  const {isPremium, isFavorite, rating, title, type, description, price, previewImage, id} = props.offer;
 
-  const buttonActiveClass: string =  isFavorite ? 'place-card__bookmark-button--active' : '';
+  const [isFavorites, setIsFavorite] = useState(isFavorite);
+
+  const buttonActiveClass: string =  isFavorites ? 'place-card__bookmark-button--active' : '';
+
+  const { mouseOverHandler } = props;
 
   return (
-    <article className="cities__place-card place-card">
-      {offer.isPremium && (
+    <article className="cities__place-card place-card" onMouseOver={mouseOverHandler}>
+      {isPremium && (
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <Link to={`/offer/${offer.id}`} title='/offer'>
-          <img className="place-card__image" src={offer.previewImage} width="260" height="200" id={(offer.id).toString()} alt={offer.description} />
+        <Link to='/' title='/'>
+          <img className="place-card__image" src={previewImage} width="260" height="200" id={(id).toString()} alt={description} />
         </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">&euro;{offer.price}</b>
+            <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${buttonActiveClass}`} type="button" onClick={() => setIsFavorite(!isFavorite)}>
+          <button className={`place-card__bookmark-button button ${buttonActiveClass}`} type="button" onClick={() => setIsFavorite(!isFavorites)}>
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg>
@@ -47,14 +43,14 @@ function PlaceCard({offer}: {offer: PlaceCardProps}): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${offer.rating * 20}%` }}></span>
+            <span style={{ width: `${rating * 20}%` }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="/">{offer.title}</a>
+          <Link to={`/offer/${id}`} title='/offer'>{title}</Link>
         </h2>
-        <p className="place-card__type">{offer.type}</p>
+        <p className="place-card__type">{type}</p>
       </div>
     </article>
   );

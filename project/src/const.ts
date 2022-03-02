@@ -10,3 +10,8 @@ export enum AuthorizationStatus {
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN',
 }
+
+export enum Pins {
+  Default = 'pin.svg',
+  Active = 'pin-active.svg',
+}
