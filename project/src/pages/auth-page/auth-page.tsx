@@ -1,4 +1,4 @@
-function LoginScreen(): JSX.Element {
+function AuthPage(): JSX.Element {
   return (
     <main className="page__main page__main--login">
       <div className="page__login-container container">
@@ -28,4 +28,4 @@ function LoginScreen(): JSX.Element {
   );
 }
 
-export default LoginScreen;
+export default AuthPage;
