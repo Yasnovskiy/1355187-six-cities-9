@@ -15,3 +15,5 @@ export enum Pins {
   Default = 'pin.svg',
   Active = 'pin-active.svg',
 }
+
+export const cityNames = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];

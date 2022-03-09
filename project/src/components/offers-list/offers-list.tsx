@@ -1,26 +1,35 @@
 import { Offers } from '../../types/offers';
 import PlaceCard from '../place-card/place-card';
+import { Page } from '../../types/page';
 
 type OffersListProps = {
   offers: Offers,
-  setActiveOffer: (id : number | null) => void;
+  type: Page,
+  setActiveOffer?: (id : number | null) => void;
+}
+
+function getClassName(type: Page ): string {
+  const mapping = {
+    main: 'cities__places-list places__list tabs__content',
+    room: 'near-places__list places__list',
+    favorites: 'favorites__places',
+  };
+  return mapping[type];
 }
 
 function OffersList(props : OffersListProps): JSX.Element {
-  const handleMouseOver = ( id: number ) => {
-    props.setActiveOffer(id);
-  };
 
-  const { offers } = props;
+  const { offers, type, setActiveOffer } = props;
 
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div className={getClassName(type)}>
 
       {offers.map((item) => (
         <PlaceCard
           key={item.id}
           offer={item}
-          mouseOverHandler={() => handleMouseOver(item.id)}
+          placeCardType={type}
+          mouseOverHandler={setActiveOffer}
         />))}
 
     </div>
