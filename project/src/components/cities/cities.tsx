@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { cityNames } from '../../const';
 
 import { setCity } from '../../store/action';
@@ -19,9 +20,9 @@ function Cities(props: { city: string }): JSX.Element {
 
           return (
             <li key={cityName} className="locations__item" onClick={handleClick(cityName)}>
-              <a href="#locations__item" className={classNameActive}>
+              <Link to="/" className={classNameActive}>
                 <span>{cityName}</span>
-              </a>
+              </Link>
             </li>
           );
         })}

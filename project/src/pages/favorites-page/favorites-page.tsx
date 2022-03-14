@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import FavoriteLocationList from '../../components/favorite-location-list/favorite-location-list';
 
-import { Offers } from '../../types/offers';
+import { Offer } from '../../types/offers';
 
 type FavoritesPageProps = {
-  offers: Offers,
+  offers: Offer[],
 }
 
 function FavoritesPage(props : FavoritesPageProps): JSX.Element {

@@ -1,9 +1,9 @@
-import { Offers } from './offers';
+import { Offer } from './offers';
 import { store } from '../store';
 
 export type AppState = {
   city: string,
-  offers: Offers,
+  offers: Offer[],
 }
 
 export type State = ReturnType<typeof store.getState>;

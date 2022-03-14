@@ -3,11 +3,12 @@ import { useParams } from 'react-router-dom';
 
 import Reviews from '../../components/reviews/reviews';
 import Map from '../../components/map/map';
-import { Offer, Offers } from '../../types/offers';
-import { getRatingStyle } from '../../utils';
-import OffersList from '../../components/offers-list/offers-list';
+import { Offer } from '../../types/offers';
 
-function RoomPage(props: {offers: Offers}): JSX.Element{
+import OffersList from '../../components/offers-list/offers-list';
+import Rating from '../../components/rating/rating';
+
+function RoomPage(props: { offers: Offer[] }): JSX.Element {
   const param = useParams();
   const paramsId = Number(param.id);
 
@@ -56,8 +57,7 @@ function RoomPage(props: {offers: Offers}): JSX.Element{
             </div>
             <div className="property__rating rating">
               <div className="property__stars rating__stars">
-                <span style={{ width: `${getRatingStyle(offersItem.rating)}%` }}></span>
-                <span className="visually-hidden">Rating</span>
+                <Rating rating={offersItem.rating} />
               </div>
               <span className="property__rating-value rating__value">{offersItem.rating}</span>
             </div>
@@ -114,12 +114,12 @@ function RoomPage(props: {offers: Offers}): JSX.Element{
             <Reviews />
           </div>
         </div>
-        <Map city={city} points={points} selectedPoint={offersItem.id} type='room'/>
+        <Map city={city} points={points} selectedPoint={offersItem.id} type='room' />
       </section>
       <div className="container">
         <section className="near-places places">
           <h2 className="near-places__title">Other places in the neighbourhood</h2>
-          <OffersList offers={props.offers} type='room'/>
+          <OffersList offers={props.offers} type='room' />
         </section>
       </div>
     </main>

@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Андрей Ясновский](https://up.htmlacademy.ru/react/9/user/1355187).
-* Наставник: [Олег Глущенко](https://htmlacademy.ru/profile/id305355).
+* Наставник: [Юрий Лаврухин](https://htmlacademy.ru/profile/id2038891).
 
 ---
 
