@@ -35,7 +35,7 @@ const SORT_TYPE_FUNCTION = {
 type MainPageProps = { offers: Offer[] } & { city: string };
 
 function MainPage(props: MainPageProps): JSX.Element {
-  const [activeOffer, setActiveOffer] = useState(null as number | null);
+  const [activeOffer, setActiveOffer] = useState<number | null>(null);
 
   const { city, offers } = props;
   const cityLocation = offers[0].city.location;
@@ -65,7 +65,7 @@ function MainPage(props: MainPageProps): JSX.Element {
                 <OffersList offers={sortedOffers} setActiveOffer={setActiveOffer} type='main' />
               </section>
               <div className="cities__right-section">
-                <Map city={cityLocation} points={points} selectedPoint={activeOffer} type='main' />
+                <Map city={cityLocation} points={points} selectedPoint={activeOffer} type='main'/>
               </div>
             </div>
           ) : <MainEmptyScreen />}

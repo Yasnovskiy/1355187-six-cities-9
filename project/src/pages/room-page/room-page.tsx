@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Reviews from '../../components/reviews/reviews';
@@ -7,6 +6,7 @@ import { Offer } from '../../types/offers';
 
 import OffersList from '../../components/offers-list/offers-list';
 import Rating from '../../components/rating/rating';
+import { Navigate } from 'react-router-dom';
 
 function RoomPage(props: { offers: Offer[] }): JSX.Element {
   const param = useParams();
@@ -14,14 +14,17 @@ function RoomPage(props: { offers: Offer[] }): JSX.Element {
 
   const offersItem: Offer = paramsId ? props.offers.filter((currentOffer) => currentOffer.id === paramsId)[0] : props.offers[0];
 
-  const city = props.offers[0].city.location;
+  const offerItem: Offer | undefined = props.offers.find((currentOffer) => currentOffer.id === paramsId);
+
+  if (!offerItem) {
+    return <Navigate to='*'/>;
+  }
+
+  const city = offerItem.city.location;
   const points = props.offers.map(({ id, location }) => ({ id, location }));
 
-  const [isFavorite, setIsFavorite] = useState(offersItem.isFavorite);
 
-  const buttonActiveClass: string = isFavorite ? 'property__bookmark-button--active' : '';
-
-  const proActiveClass: string = offersItem.host.isPro ? 'property__avatar-wrapper--pro' : '';
+  const proActiveClass: string = offerItem.host.isPro ? 'property__avatar-wrapper--pro' : '';
 
   return (
     <main className="page__main page__main--property">
@@ -48,11 +51,11 @@ function RoomPage(props: { offers: Offer[] }): JSX.Element {
               <h1 className="property__name">
                 {offersItem.title}
               </h1>
-              <button className={`property__bookmark-button ${buttonActiveClass} button`} type="button" onClick={() => setIsFavorite(!isFavorite)}>
+              <button className={`property__bookmark-button ${offerItem.isFavorite ? 'property__bookmark-button--active' : ''} button`} type="button">
                 <svg className="property__bookmark-icon" width="31" height="33">
                   <use xlinkHref="#icon-bookmark"></use>
                 </svg>
-                <span className="visually-hidden">To bookmarks</span>
+                <span className="visually-hidden">{offerItem.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
               </button>
             </div>
             <div className="property__rating rating">
@@ -114,7 +117,7 @@ function RoomPage(props: { offers: Offer[] }): JSX.Element {
             <Reviews />
           </div>
         </div>
-        <Map city={city} points={points} selectedPoint={offersItem.id} type='room' />
+        <Map city={city} points={points} selectedPoint={offersItem.id} type='room'/>
       </section>
       <div className="container">
         <section className="near-places places">
