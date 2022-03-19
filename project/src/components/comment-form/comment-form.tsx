@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function ReviewsFormScreen(): JSX.Element {
+function CommentForm(): JSX.Element {
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
 
@@ -59,4 +59,4 @@ function ReviewStart({ value, rating, setRating }: ReviewStartProps): JSX.Elemen
   );
 }
 
-export default ReviewsFormScreen;
+export default CommentForm;

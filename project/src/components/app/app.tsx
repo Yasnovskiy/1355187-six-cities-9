@@ -1,42 +1,43 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../../const';
+
 import PrivateRoute from '../private-route/private-route';
 
-import { Offers } from '../../types/offers';
+import { AppRoute, AuthorizationStatus } from '../../const';
 
 import Layout from '../layout/layout';
-import MainScreen from '../main-screen/main-screen';
-import FavoritesScreen from '../favorites-screen/favorites-screen';
-import LoginScreen from '../login-screen/login-screen';
-import PropertyScreen from '../property-screen/property-screen';
-import NotFoundScreen from '../not-found-screen/not-found-screen';
 
-type AppProps = {
-  offers: Offers,
-}
+import AuthPage from '../../pages/auth-page/auth-page';
+import MainPage from '../../pages/main-page/main-page';
+import RoomPage from '../../pages/room-page/room-page';
+import FavoritesPage from '../../pages/favorites-page/favorites-page';
+import NotFoundPage from '../../pages/not-found-page/not-found-page';
 
-function App({ offers }: AppProps): JSX.Element {
+import { useAppSelector } from '../../hooks';
+
+function App(): JSX.Element {
+
+  const {city, offers} = useAppSelector((state) => state);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path={AppRoute.Main} element={<Layout />} >
-          <Route index element={<MainScreen offers={offers}/>} />
-          <Route path={AppRoute.Room} element={<PropertyScreen offers={offers}/>} />
-          <Route path={AppRoute.SignIn} element={<LoginScreen />} />
+          <Route index element={<MainPage offers={offers} city={city} />} />
+          <Route path={AppRoute.Room} element={<RoomPage offers={offers} />} />
+          <Route path={AppRoute.SignIn} element={<AuthPage />} />
           <Route
             path={AppRoute.Favorites}
             element={
               <PrivateRoute
                 authorizationStatus={AuthorizationStatus.NoAuth}
               >
-                <FavoritesScreen />
+                <FavoritesPage offers={offers} />
               </PrivateRoute>
             }
           >
           </Route>
         </Route>
-        <Route path='*' element={<NotFoundScreen />} />
+        <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

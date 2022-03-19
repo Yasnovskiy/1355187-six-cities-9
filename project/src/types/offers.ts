@@ -35,8 +35,6 @@ export type Offer = {
   id: number,
 };
 
-export type Offers = Offer[];
-
 export type Point = Pick<Offer, 'id' | 'location' >;
 
-export type Points = Point[];
+export type SortTypeProps = 'default' | 'byPriceUp' | 'byPriceDown' | 'byRatingDown';
