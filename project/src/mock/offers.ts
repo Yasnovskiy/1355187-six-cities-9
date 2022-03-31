@@ -174,7 +174,7 @@ export const offers: Offers = [
   },
   {
     city: {
-      name: 'Amsterdam',
+      name: 'Cologne',
       location: {
         latitude: 50.938361,
         longitude: 6.959974,
@@ -223,5 +223,57 @@ export const offers: Offers = [
       zoom: 16,
     },
     id: 60,
+  },
+  {
+    city: {
+      name: 'Cologne',
+      location: {
+        latitude: 50.937361,
+        longitude: 6.999974,
+        zoom: 13,
+      },
+    },
+    previewImage: 'https://9.react.pages.academy/static/hotel/10.jpg',
+    images: [
+      'https://9.react.pages.academy/static/hotel/10.jpg',
+      'https://9.react.pages.academy/static/hotel/16.jpg',
+      'https://9.react.pages.academy/static/hotel/8.jpg',
+      'https://9.react.pages.academy/static/hotel/5.jpg',
+      'https://9.react.pages.academy/static/hotel/15.jpg',
+      'https://9.react.pages.academy/static/hotel/18.jpg',
+      'https://9.react.pages.academy/static/hotel/13.jpg',
+    ],
+    title: 'House in countryside',
+    isFavorite: false,
+    isPremium: true,
+    rating: 4.9,
+    type: 'hotel',
+    bedrooms: 3,
+    maxAdults: 4,
+    price: 4783,
+    goods: [
+      'Breakfast',
+      'Dishwasher',
+      'Towels',
+      'Fridge',
+      'Baby seat',
+      'Air conditioning',
+      'Laptop friendly workspace',
+      'Coffee machine',
+      'Washer',
+    ],
+    host: {
+      id: 20,
+      name: 'Anna',
+      isPro: true,
+      avatarUrl: 'img/avatar-angelina.jpg',
+    },
+    description: 'I rent out a very sunny and bright apartment only 7 minutes walking distance to the metro station. The apartment has a spacious living room with a kitchen, one bedroom and a bathroom with mit bath. A terrace can be used in summer.',
+    location: {
+      latitude: 50.934361,
+      longitude: 6.943974,
+      zoom: 16,
+    },
+    id: 66,
   },
 ];
