@@ -1,8 +1,10 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../../const';
+// import { useSelector } from 'react-redux';
+
 import PrivateRoute from '../private-route/private-route';
 
-import { Offers } from '../../types/offers';
+import { AppRoute, AuthorizationStatus } from '../../const';
+// import { Offers } from '../../types/offers';
 
 import Layout from '../layout/layout';
 
@@ -11,19 +13,23 @@ import MainPage from '../../pages/main-page/main-page';
 import RoomPage from '../../pages/room-page/room-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
+// import { State } from '../../types/state';
+import { useAppSelector } from '../../hooks';
 
-type AppProps = {
-  offers: Offers,
-}
+// type AppProps = {
+//   offers: Offers,
+// }
 
-function App(offers : AppProps): JSX.Element {
+function App(): JSX.Element {
+
+  const {city, offers} = useAppSelector((state) => state);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path={AppRoute.Main} element={<Layout />} >
-          <Route index element={<MainPage offers={offers.offers}/>} />
-          <Route path={AppRoute.Room} element={<RoomPage offers={offers.offers} />} />
+          <Route index element={<MainPage offers={offers} city={city} />} />
+          <Route path={AppRoute.Room} element={<RoomPage offers={offers} />} />
           <Route path={AppRoute.SignIn} element={<AuthPage />} />
           <Route
             path={AppRoute.Favorites}
@@ -31,7 +37,7 @@ function App(offers : AppProps): JSX.Element {
               <PrivateRoute
                 authorizationStatus={AuthorizationStatus.NoAuth}
               >
-                <FavoritesPage offers={offers.offers} />
+                <FavoritesPage offers={offers} />
               </PrivateRoute>
             }
           >
