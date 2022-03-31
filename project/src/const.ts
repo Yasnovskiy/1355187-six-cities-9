@@ -18,6 +18,14 @@ export enum Pins {
   Active = 'pin-active.svg',
 }
 
+export enum APIRoute {
+  favorites = '/favorites',
+  Comment = '/comments',
+  Offers = '/offer',
+  Login = '/login',
+  Logout = '/logout',
+}
+
 export const cityNames = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
 
 export const sortName: SortTypeProps[] = ['default', 'byPriceUp', 'byPriceDown', 'byRatingDown'];

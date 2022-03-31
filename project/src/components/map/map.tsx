@@ -26,17 +26,14 @@ type MapProps = {
 
 type MapType = 'main' | 'room';
 
-function getClassName(type: MapType): string {
-  const mapping = {
-    main: 'cities__map map',
-    room: 'property__map map',
-  };
+const mapping = {
+  main: 'cities__map map',
+  room: 'property__map map',
+};
 
-  return mapping[type];
-}
 
-const useMapAdapter = (props: Omit<MapProps, 'type'>)=>{
-  const { city, points, selectedPoint } = props;
+const useMapAdapter = (options: Omit<MapProps, 'type'>) => {
+  const { city, points, selectedPoint } = options;
 
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
@@ -71,9 +68,9 @@ const useMapAdapter = (props: Omit<MapProps, 'type'>)=>{
 
   return mapRef;
 };
-function Map({city, points, selectedPoint, type}: MapProps): JSX.Element {
-  const mapRef = useMapAdapter({city, points, selectedPoint});
+function Map({ city, points, selectedPoint, type }: MapProps): JSX.Element {
+  const mapRef = useMapAdapter({ city, points, selectedPoint });
 
-  return <section ref={mapRef} className={getClassName(type)}></section>;
+  return <section ref={mapRef} className={mapping[type]}></section>;
 }
 export default Map;

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
 import PrivateRoute from '../private-route/private-route';
@@ -12,18 +13,39 @@ import RoomPage from '../../pages/room-page/room-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 
-import { useAppSelector } from '../../hooks';
+import { useAppSelector, useAppDispatch } from '../../hooks';
+import { setOffers } from '../../store/reducers/offers-reducer';
+import { api } from '../../store';
+import { toast } from 'react-toastify';
+
 
 function App(): JSX.Element {
 
-  const {city, offers} = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+
+  const { offers } = useAppSelector((state) => state);
+
+  useEffect(() => {
+    dispatch((nextDispatch, getState) => {
+      toast.promise(
+        api.get('/hotels')
+          .then((response) => {
+            nextDispatch(setOffers(response.data));
+          }),
+        {
+          pending: 'Loading...',
+          error: 'Network error',
+        },
+      );
+    });
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path={AppRoute.Main} element={<Layout />} >
-          <Route index element={<MainPage offers={offers} city={city} />} />
-          <Route path={AppRoute.Room} element={<RoomPage offers={offers} />} />
+          <Route index element={<MainPage />} />
+          <Route path={AppRoute.Room} element={<RoomPage />} />
           <Route path={AppRoute.SignIn} element={<AuthPage />} />
           <Route
             path={AppRoute.Favorites}

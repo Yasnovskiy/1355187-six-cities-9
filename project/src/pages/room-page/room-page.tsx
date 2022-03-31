@@ -6,23 +6,26 @@ import { Offer } from '../../types/offers';
 
 import OffersList from '../../components/offers-list/offers-list';
 import Rating from '../../components/rating/rating';
-import { Navigate } from 'react-router-dom';
+import { useAppSelector } from '../../hooks';
+import NotFoundPage from '../not-found-page/not-found-page';
 
-function RoomPage(props: { offers: Offer[] }): JSX.Element {
+function RoomPage(): JSX.Element {
   const param = useParams();
   const paramsId = Number(param.id);
 
-  const offersItem: Offer = paramsId ? props.offers.filter((currentOffer) => currentOffer.id === paramsId)[0] : props.offers[0];
+  const { offers } = useAppSelector((state) => state);
 
-  const offerItem: Offer | undefined = props.offers.find((currentOffer) => currentOffer.id === paramsId);
+  const offersItem: Offer = paramsId ? offers.filter((currentOffer) => currentOffer.id === paramsId)[0] : offers[0];
+
+  const offerItem: Offer | undefined = offers.find((currentOffer) => currentOffer.id === paramsId);
 
   if (!offerItem) {
-    return <Navigate to='*'/>;
+
+    return <NotFoundPage/>;
   }
 
   const city = offerItem.city.location;
-  const points = props.offers.map(({ id, location }) => ({ id, location }));
-
+  const points = offers.map(({ id, location }) => ({ id, location }));
 
   const proActiveClass: string = offerItem.host.isPro ? 'property__avatar-wrapper--pro' : '';
 
@@ -83,7 +86,7 @@ function RoomPage(props: { offers: Offer[] }): JSX.Element {
               <div className="property__inside">
                 <h2 className="property__inside-title">What&apos;s inside</h2>
                 <ul className="property__inside-list">
-                  {offersItem.goods?.map((item) => (
+                  {offersItem.goods.map((item) => (
                     <li key={item} className="property__inside-item">
                       {item}
                     </li>
@@ -122,7 +125,7 @@ function RoomPage(props: { offers: Offer[] }): JSX.Element {
       <div className="container">
         <section className="near-places places">
           <h2 className="near-places__title">Other places in the neighbourhood</h2>
-          <OffersList offers={props.offers} type='room' />
+          <OffersList offers={offers} type='room' />
         </section>
       </div>
     </main>

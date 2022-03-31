@@ -1,28 +1,32 @@
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { cityNames } from '../../const';
 
-import { setCity } from '../../store/action';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setCity } from '../../store/reducers/city-reducer';
 
-function Cities(props: { city: string }): JSX.Element {
-  const { city } = props;
+function Cities(): JSX.Element {
+  const { city } = useAppSelector((state) => state);
+
   const dispatch = useAppDispatch();
 
-  function handleClick(cityName: string) {
-    return () => dispatch(setCity(cityName));
-  }
-
+  // компонент для списка и элемента
   return (
     <section className="locations container">
       <ul className="locations__list tabs__list">
         {cityNames.map((cityName) => {
+
+          function handleClick() {
+
+            return () => dispatch(setCity(cityName));
+          }
+
           const classNameActive = `locations__item-link tabs__item ${cityName === city ? 'tabs__item--active' : ''}`;
 
           return (
-            <li key={cityName} className="locations__item" onClick={handleClick(cityName)}>
-              <Link to="/" className={classNameActive}>
+            <li key={cityName} className="locations__item" onClick={handleClick()}>
+              <span className={classNameActive}>
                 <span>{cityName}</span>
-              </Link>
+              </span>
             </li>
           );
         })}
