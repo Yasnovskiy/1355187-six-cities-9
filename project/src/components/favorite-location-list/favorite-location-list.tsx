@@ -1,14 +1,14 @@
-import { Offers, Offer } from '../../types/offers';
+import { Offer } from '../../types/offers';
 import FavoriteLocationItem from '../favorite-location-item/favorite-location-item';
 
 type FavoriteLocationListProps = {
-  offers: Offers,
+  offers: Offer[],
 }
 
 function FavoriteLocationList(props: FavoriteLocationListProps): JSX.Element {
   const { offers } = props;
 
-  const sortedOffers = offers.reduce((acc: { [cityName: string]: Offers }, offer: Offer) => {
+  const sortedOffers = offers.reduce((acc: { [cityName: string]: Offer[] }, offer: Offer) => {
     const cityName = offer.city.name;
 
     if (!acc[cityName]) {

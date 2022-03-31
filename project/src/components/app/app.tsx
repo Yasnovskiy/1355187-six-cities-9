@@ -1,10 +1,8 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-// import { useSelector } from 'react-redux';
 
 import PrivateRoute from '../private-route/private-route';
 
 import { AppRoute, AuthorizationStatus } from '../../const';
-// import { Offers } from '../../types/offers';
 
 import Layout from '../layout/layout';
 
@@ -13,12 +11,8 @@ import MainPage from '../../pages/main-page/main-page';
 import RoomPage from '../../pages/room-page/room-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
-// import { State } from '../../types/state';
-import { useAppSelector } from '../../hooks';
 
-// type AppProps = {
-//   offers: Offers,
-// }
+import { useAppSelector } from '../../hooks';
 
 function App(): JSX.Element {
 

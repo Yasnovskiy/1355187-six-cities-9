@@ -1,3 +1,5 @@
+import { SortTypeProps } from './types/offers';
+
 export enum AppRoute {
   Main = '/',
   Favorites = '/favorites',
@@ -17,3 +19,6 @@ export enum Pins {
 }
 
 export const cityNames = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
+
+export const sortName: SortTypeProps[] = ['default', 'byPriceUp', 'byPriceDown', 'byRatingDown'];
+

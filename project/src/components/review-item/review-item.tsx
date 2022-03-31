@@ -1,9 +1,9 @@
 import { Comment } from '../../types/reviews';
-import { getRatingStyle } from '../../utils';
+import Rating from '../rating/rating';
 
-function ReviewItem(props: {comment: Comment}): JSX.Element {
+function ReviewItem(props: { comment: Comment }): JSX.Element {
 
-  const  { date, rating, comment, user} = props.comment;
+  const { date, rating, comment, user } = props.comment;
 
   return (
     <li className="reviews__item">
@@ -18,8 +18,7 @@ function ReviewItem(props: {comment: Comment}): JSX.Element {
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span style={{ width: `${getRatingStyle(rating)}%` }}></span>
-            <span className="visually-hidden">Rating</span>
+            <Rating rating={rating} />
           </div>
         </div>
         <p className="reviews__text">

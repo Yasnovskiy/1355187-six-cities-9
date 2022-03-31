@@ -1,28 +1,25 @@
-import { Offers } from '../../types/offers';
+import { Offer } from '../../types/offers';
 import PlaceCard from '../place-card/place-card';
 import { Page } from '../../types/page';
 
 type OffersListProps = {
-  offers: Offers,
+  offers: Offer[],
   type: Page,
   setActiveOffer?: (id : number | null) => void;
 }
 
-function getClassName(type: Page ): string {
-  const mapping = {
-    main: 'cities__places-list places__list tabs__content',
-    room: 'near-places__list places__list',
-    favorites: 'favorites__places',
-  };
-  return mapping[type];
-}
+const COMPONENT_TYPE_TO_CLASSNAME = {
+  main: 'cities__places-list places__list tabs__content',
+  room: 'near-places__list places__list',
+  favorites: 'favorites__places',
+};
 
 function OffersList(props : OffersListProps): JSX.Element {
 
   const { offers, type, setActiveOffer } = props;
 
   return (
-    <div className={getClassName(type)}>
+    <div className={COMPONENT_TYPE_TO_CLASSNAME[type]}>
 
       {offers.map((item) => (
         <PlaceCard

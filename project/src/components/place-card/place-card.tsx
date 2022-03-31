@@ -1,29 +1,25 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import Rating from '../rating/rating';
+
 import { Offer } from '../../types/offers';
 import { Page } from '../../types/page';
 
-import { getRatingStyle } from '../../utils';
-
-function getClassName(type : Page) {
-  const classOptions = {
-    main: {
-      className: 'cities__place-card',
-      wraperImgClassName: 'cities__image-wrapper',
-    },
-    room: {
-      className: 'near-places__card',
-      wraperImgClassName: 'near-places__image-wrapper',
-    },
-    favorites: {
-      className: 'favorites__card',
-      wraperImgClassName: 'favorites__image-wrapper',
-    },
-  };
-
-  return classOptions[type];
-}
+const COMPONENT_TYPE_TO_CLASSNAME = {
+  main: {
+    className: 'cities__place-card',
+    wraperImgClassName: 'cities__image-wrapper',
+  },
+  room: {
+    className: 'near-places__card',
+    wraperImgClassName: 'near-places__image-wrapper',
+  },
+  favorites: {
+    className: 'favorites__card',
+    wraperImgClassName: 'favorites__image-wrapper',
+  },
+};
 
 type PlaceCardProps = {
   offer: Pick<Offer, 'isPremium' | 'isFavorite' | 'rating' | 'title' | 'type' | 'description' | 'price' | 'previewImage' | 'id'>,
@@ -46,7 +42,7 @@ function PlaceCard(props: PlaceCardProps): JSX.Element {
     }
   };
 
-  const { className, wraperImgClassName } = getClassName(props.placeCardType);
+  const { className, wraperImgClassName } = COMPONENT_TYPE_TO_CLASSNAME[props.placeCardType];
 
   const isFavoritesClass = props.placeCardType === 'favorites';
 
@@ -77,8 +73,7 @@ function PlaceCard(props: PlaceCardProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${getRatingStyle(rating)}%` }}></span>
-            <span className="visually-hidden">Rating</span>
+            <Rating rating={rating}/>
           </div>
         </div>
         <h2 className="place-card__name">
