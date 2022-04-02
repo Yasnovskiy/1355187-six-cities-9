@@ -6,6 +6,7 @@ const cityReducer = createSlice({
   reducers: {
     setCity: (state, action:PayloadAction<string>) => {
       state = action.payload;
+
       return state;
     },
   },

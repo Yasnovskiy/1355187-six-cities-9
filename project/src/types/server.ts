@@ -11,3 +11,10 @@ export type UserData = {
   isPro: boolean,
   token: string,
 }
+
+export type AuthDataType = {
+  email: FormDataEntryValue | null,
+  password: FormDataEntryValue | null,
+}
+
+export type CommentFormDataType = { rating: number | null, comment: string };
