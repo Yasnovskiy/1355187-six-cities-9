@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks';
+import { errorHandle } from '../../services/error-handle';
+import { sendCommentAction } from '../../store/api-actions';
 
 function CommentForm(): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
 
+  const id = useParams();
   const ratingStars = [];
 
   for (let value = 1; value <= 5; value++) {
@@ -14,11 +21,30 @@ function CommentForm(): JSX.Element {
 
   const reviewLenght: boolean = review.length >= 50 && rating !== 0;
 
+  function cleanState() {
+    setReview('');
+    setRating(0);
+  }
+
+  function handleSubmit(e: SyntheticEvent) {
+    e.preventDefault();
+    if (id.id) {
+      cleanState();
+      dispatch(sendCommentAction( {
+        rating: rating,
+        comment: review,
+      }, id.id, cleanState));
+    } else {
+      errorHandle({ error: new Error() });
+    }
+  }
+
   return (
     <form
       className="reviews__form form"
       action="#"
       method="post"
+      onSubmit={handleSubmit}
     >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
 
@@ -27,6 +53,7 @@ function CommentForm(): JSX.Element {
       </div>
 
       <textarea className="reviews__textarea form__textarea" id="review" onChange={(evt) => setReview(evt.target.value)} value={review} name="review" placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
+
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
@@ -39,13 +66,13 @@ function CommentForm(): JSX.Element {
 
 type ReviewStartProps = {
   value: number,
-  rating: number,
+  rating: number | null,
   setRating: (rating: number) => void,
 }
 
 const labelTitleArray: string[] = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
 
-function ReviewStart({ value, rating, setRating }: ReviewStartProps): JSX.Element {
+function ReviewStart({ value, rating, setRating}: ReviewStartProps): JSX.Element {
 
   return (
     <>

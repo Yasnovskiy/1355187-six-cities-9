@@ -7,11 +7,15 @@ import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import  store  from './store';
+import { fetchOffersAction, checkAuthAction } from './store/api-actions';
+
+store.dispatch(fetchOffersAction);
+store.dispatch(checkAuthAction);
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ToastContainer />
+      <ToastContainer position="top-center" />
       <App />
     </Provider>
   </React.StrictMode>,
