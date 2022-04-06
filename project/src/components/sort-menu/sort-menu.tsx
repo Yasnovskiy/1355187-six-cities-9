@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
+import clsx from 'clsx';
 
 import { SortTypeProps } from '../../types/offers';
 import { sortName } from '../../const';
@@ -11,7 +12,7 @@ const SORT_TYPE = {
 };
 
 type SortMenuProps = {
-  setSort: (x : SortTypeProps) => void,
+  setSort: (x: SortTypeProps) => void,
   sortType: SortTypeProps,
 }
 
@@ -20,7 +21,7 @@ function SortMenu(props: SortMenuProps): JSX.Element {
 
   const [isSortMenuOpen, setIsSortMenuOpen] = useState(false);
 
-  function handlerClickSortItem (sortItem: SortTypeProps) {
+  function handlerClickSortItem(sortItem: SortTypeProps) {
     setSort(sortItem);
     setIsSortMenuOpen(false);
   }
@@ -34,13 +35,24 @@ function SortMenu(props: SortMenuProps): JSX.Element {
           <use xlinkHref="#icon-arrow-select"></use>
         </svg>
       </span>
-      <ul className={`places__options places__options--custom ${isSortMenuOpen ? 'places__options--opened' : ''}`}>
+      <ul className={clsx('places__options places__options--custom', {
+        'places__options--opened': isSortMenuOpen,
+      })}
+      >
         {isSortMenuOpen && sortName.map((sortItem) => (
-          <li key={sortItem} className={`places__option ${sortItem === sortType ? 'places__option--active' : ''}`} onClick={() => handlerClickSortItem(sortItem)} tabIndex={0}>{SORT_TYPE[sortItem]}</li>
+          <li key={sortItem}
+            className={clsx('places__option', {
+              'places__option--active': sortItem === sortType,
+            })}
+            onClick={() => handlerClickSortItem(sortItem)}
+            tabIndex={0}
+          >
+            {SORT_TYPE[sortItem]}
+          </li>
         ))}
       </ul>
     </form>
   );
 }
 
-export default SortMenu;
+export default memo(SortMenu, (prevProps, nextProps) => prevProps.sortType === nextProps.sortType);
