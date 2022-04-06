@@ -10,8 +10,6 @@ import MainPage from '../../pages/main-page/main-page';
 import RoomPage from '../../pages/room-page/room-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
-// import HistoryRouter from '../history-router/history-router';
-// import browserHistory from '../../browser-history';
 import LoadingScreen from '../loading-screen/loading-screen';
 
 

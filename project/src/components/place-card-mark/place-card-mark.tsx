@@ -1,8 +1,6 @@
 import clsx from 'clsx';
 import { PlaceCardType } from '../../types/reviews';
 
-// import { PlaceCardType } from '../../types/other-types';
-
 function PlaceCardMark(props: { type: PlaceCardType }) {
   const { type } = props;
 

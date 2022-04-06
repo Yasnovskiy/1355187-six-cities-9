@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { AppRoute, ReducersName } from '../../const';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 
-// import { redirectToRoute } from '../../store/action';
 import { changeOfferStatusAction } from '../../store/api-actions';
 import { PlaceCardType } from '../../types/reviews';
 
@@ -21,7 +20,6 @@ function Bookmark(props: { hotelId: number, isFavorite: boolean, type: PlaceCard
 
   function toggleStatus() {
     if (authorizationStatus !== 'authorized') {
-      // dispatch(redirectToRoute(AppRoute.Login));
       navigate(AppRoute.Login);
     } else {
       const newStatus = !isFavorite;
