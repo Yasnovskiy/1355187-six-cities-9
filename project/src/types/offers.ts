@@ -1,3 +1,5 @@
+import { User } from './reviews';
+
 export type LocationOffer = {
   latitude: number,
   longitude: number,
@@ -34,6 +36,22 @@ export type Offer = {
   location: LocationOffer,
   id: number,
 };
+
+export type RoomStateType = Offer | null;
+
+export type Comment = {
+  comment: string,
+  date: string,
+  id: number,
+  rating: number,
+  user: Omit<User, 'email' | 'token'>,
+}
+
+export type RoomDataType = {
+  room: RoomStateType,
+  offersNearby: Offer[];
+  comments: Comment[];
+}
 
 export type Point = Pick<Offer, 'id' | 'location' >;
 
