@@ -1,4 +1,5 @@
 import { Navigate, RouteProps } from 'react-router-dom';
+import { ReducersName } from '../../const';
 import { useAppSelector } from '../../hooks';
 
 type PrivateRouteProps = RouteProps & {
@@ -6,7 +7,8 @@ type PrivateRouteProps = RouteProps & {
 }
 
 function PrivateRoute({children}: PrivateRouteProps): JSX.Element {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector((state) => state[ReducersName.auth]);
+
   const hasAccess = authorizationStatus === 'authorized';
 
   return hasAccess ? children : <Navigate to={'/login'} />;

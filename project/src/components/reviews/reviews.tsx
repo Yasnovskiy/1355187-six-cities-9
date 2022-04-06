@@ -1,11 +1,12 @@
 import ReviewList from '../review-list/review-list';
 import CommentForm from '../comment-form/comment-form';
 import { useAppSelector } from '../../hooks';
+import { ReducersName } from '../../const';
 
 function Reviews(): JSX.Element {
   const {comments, authorizationStatus} = useAppSelector((state) => ({
-    comments: state.comments,
-    authorizationStatus: state.authorizationStatus,
+    comments: state[ReducersName.comments],
+    authorizationStatus: state[ReducersName.auth],
   }));
   const isAuthorisedUser = authorizationStatus === 'authorized';
 

@@ -1,9 +1,8 @@
 import request from 'axios';
 import {toast} from 'react-toastify';
-import {ErrorType} from '../types/error';
 import {HTTP_CODE} from '../const';
 
-export const errorHandle = (error: ErrorType | unknown): void => {
+export const errorHandle = (error: Error | unknown): void => {
   if (!request.isAxiosError(error)) {
     throw error;
   }
