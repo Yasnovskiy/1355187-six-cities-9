@@ -1,12 +1,26 @@
-import { SyntheticEvent } from 'react';
-import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
-import { useAppDispatch } from '../../hooks';
+import { SyntheticEvent, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppRoute, ReducersName } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authAction } from '../../store/api-actions';
+import LocationLink from '../../components/location-link/location-link';
 
 function AuthPage(): JSX.Element {
 
   const dispatch = useAppDispatch();
+  const {authStatus, city}= useAppSelector((state) => ({
+    authStatus: state[ReducersName.auth],
+    city: state[ReducersName.city],
+  }));
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authStatus === 'authorized') {
+      navigate(AppRoute.Root);
+    }
+  }, [authStatus, navigate]);
+
 
   function handleSubmit(evt: SyntheticEvent) {
     evt.preventDefault();
@@ -51,9 +65,7 @@ function AuthPage(): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="/">
-                <span>Amsterdam</span>
-              </a>
+              <LocationLink cityName={city as string} />
             </div>
           </section>
         </div>

@@ -1,38 +1,25 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import Rating from '../rating/rating';
+import clsx from 'clsx';
 
 import { Offer } from '../../types/offers';
-import { Page } from '../../types/page';
+import { PlaceCardType } from '../../types/reviews';
 
-const COMPONENT_TYPE_TO_CLASSNAME = {
-  main: {
-    className: 'cities__place-card',
-    wraperImgClassName: 'cities__image-wrapper',
-  },
-  room: {
-    className: 'near-places__card',
-    wraperImgClassName: 'near-places__image-wrapper',
-  },
-  favorites: {
-    className: 'favorites__card',
-    wraperImgClassName: 'favorites__image-wrapper',
-  },
-};
+import Rating from '../rating/rating';
+import Bookmark from '../bookmark/bookmark';
+import PlaceCardMark from '../place-card-mark/place-card-mark';
 
 type PlaceCardProps = {
   offer: Pick<Offer, 'isPremium' | 'isFavorite' | 'rating' | 'title' | 'type' | 'description' | 'price' | 'previewImage' | 'id'>,
-  placeCardType: Page,
+  placeCardType: PlaceCardType,
   mouseOverHandler?: (id: number | null) => void,
 }
 
 function PlaceCard(props: PlaceCardProps): JSX.Element {
   const { isPremium, isFavorite, rating, title, type, description, price, previewImage, id } = props.offer;
 
-  const [isFavorites, setIsFavorite] = useState(isFavorite);
-
-  const buttonActiveClass: string = isFavorites ? 'place-card__bookmark-button--active' : '';
+  const isTypePlaceCard = props.placeCardType === 'placeCard';
+  const isTypePlaceNearby = props.placeCardType === 'placeNearby';
+  const isTypeFavorite = props.placeCardType === 'favorite';
 
   const { mouseOverHandler } = props;
 
@@ -42,34 +29,37 @@ function PlaceCard(props: PlaceCardProps): JSX.Element {
     }
   };
 
-  const { className, wraperImgClassName } = COMPONENT_TYPE_TO_CLASSNAME[props.placeCardType];
+  const articleClass = clsx('place-card', {
+    'cities__place-card': isTypePlaceCard,
+    'near-places__card': isTypePlaceNearby,
+    'favorites__card': isTypeFavorite,
+  });
 
-  const isFavoritesClass = props.placeCardType === 'favorites';
+  const imgWrapperClass = clsx('place-card__image-wrapper', {
+    'cities__image-wrapper': isTypePlaceCard,
+    'near-places__image-wrapper': isTypePlaceNearby,
+    'favorites__image-wrapper': isTypeFavorite,
+  });
+
+  const infoClass = clsx('place-card__info', {
+    'favorites__card-info': isTypeFavorite,
+  });
 
   return (
-    <article className={`${className} place-card`} onMouseOver={() => handleMouseOver(id)}>
-      {isPremium && (
-        <div className="place-card__mark">
-          <span>Premium</span>
-        </div>
-      )}
-      <div className={`${wraperImgClassName} place-card__image-wrapper`}>
+    <article className={articleClass} onMouseOver={() => handleMouseOver(id)}>
+      {isPremium && <PlaceCardMark type="placeCard"/>}
+      <div className={imgWrapperClass}>
         <Link to='/' title='/'>
-          <img className="place-card__image" src={previewImage} width={`${isFavoritesClass ? 150 : 260}`} height={`${isFavoritesClass ? 110 : 200}`} id={(id).toString()} alt={description} />
+          <img className="place-card__image" src={previewImage} width={`${isTypeFavorite ? 150 : 260}`} height={`${isTypeFavorite ? 110 : 200}`} alt={description} />
         </Link>
       </div>
-      <div className={`${isFavoritesClass ? 'favorites__card-info' : ''} place-card__info`}>
+      <div className={infoClass}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">&euro;{price}</b>
             <span className="place-card__price-text">&#47;&nbsp;night</span>
           </div>
-          <button className={`place-card__bookmark-button button ${buttonActiveClass}`} type="button" onClick={() => setIsFavorite(!isFavorites)}>
-            <svg className="place-card__bookmark-icon" width="18" height="19">
-              <use xlinkHref="#icon-bookmark"></use>
-            </svg>
-            <span className="visually-hidden">To bookmarks</span>
-          </button>
+          <Bookmark hotelId={id} isFavorite={isFavorite} type={props.placeCardType} />
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">

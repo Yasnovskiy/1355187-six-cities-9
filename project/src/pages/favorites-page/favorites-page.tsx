@@ -1,30 +1,48 @@
-import { Link } from 'react-router-dom';
+import { useLayoutEffect } from 'react';
+
+import clsx from 'clsx';
+
+import { ReducersName } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { fetchFavoritesAction } from '../../store/api-actions';
+
+import Header from '../../components/header/header';
 import FavoriteLocationList from '../../components/favorite-location-list/favorite-location-list';
+import FavoritesEmptyScreen from '../../components/favorites-empty-screen/favorites-empty-screen';
 
-import { Offer } from '../../types/offers';
+function FavoritesPage(): JSX.Element {
 
-type FavoritesPageProps = {
-  offers: Offer[],
-}
+  const dispatch = useAppDispatch();
 
-function FavoritesPage(props : FavoritesPageProps): JSX.Element {
+  const offers = useAppSelector((state) => state[ReducersName.favorites]);
 
-  const { offers } = props;
+  const isFaviritesEmpty = offers.length === 0;
+
+  useLayoutEffect(() => {
+    dispatch(fetchFavoritesAction);
+  }, [dispatch]);
+
+  const mainClassName = clsx('page__main', 'page__main--favorites', {
+    'page__main--favorites-empty': isFaviritesEmpty,
+  });
 
   return (
     <>
-      <main className="page__main page__main--favorites">
+      <Header />
+      <main className={mainClassName}>
         <div className="page__favorites-container container">
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
-            <FavoriteLocationList offers={offers}/>
+            {isFaviritesEmpty ?
+              <FavoritesEmptyScreen /> :
+              <FavoriteLocationList offers={offers} />}
           </section>
         </div>
       </main>
       <footer className="footer container">
-        <Link className='footer__logo-link' to='/' title='/'>
+        <a className="footer__logo-link" href="/">
           <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
-        </Link>
+        </a>
       </footer>
     </>
   );
