@@ -10,7 +10,7 @@ export type Comments = Comment[];
 
 export type MapType = 'room' | 'main';
 
-export type PlaceCardType = 'room' | 'main';
+export type PlaceCardType = 'favorite' | 'placeCard' | 'placeNearby'| 'room';
 
 export type PlaceCardListType = PlaceCardType;
 

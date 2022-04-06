@@ -10,4 +10,4 @@ export type StateType = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
 
-export type AuthorizationStatusType = 'authorized' | 'unauthorized';
+export type AuthorizationStatusType = 'authorized' | 'unauthorized' | 'unknown';
