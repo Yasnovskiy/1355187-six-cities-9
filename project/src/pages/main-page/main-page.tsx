@@ -1,92 +1,73 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Offer, SortTypeProps } from '../../types/offers';
+import clsx from 'clsx';
 
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
-import CitiesComponent from '../../components/cities-component/cities-component';
 import SortMenu from '../../components/sort-menu/sort-menu';
 import MainEmptyScreen from '../../components/main-empty-screen/main-empty-screen';
 import { useAppSelector } from '../../hooks';
-import HeaderNavLogged from '../../components/header-nav-logged/header-nav-logged';
-import HeaderNavNotLogged from '../../components/header-nav-not-logged/header-nav-not-logged';
+import Header from '../../components/header/header';
+import { ReducersName } from '../../const';
+import CitiesList from '../../components/cities-list/cities-list';
 
 const SORT_TYPE_FUNCTION = {
   default: () => 0,
-  byPriceUp: (a: Offer, b: Offer) => {
-    if (a.price === b.price) {
-      return 0;
-    }
-
-    return a.price > b.price ? 1 : -1;
-  },
-  byPriceDown: (a: Offer, b: Offer) => {
-    if (a.price === b.price) {
-      return 0;
-    }
-
-    return a.price < b.price ? 1 : -1;
-  },
-  byRatingDown: (a: Offer, b: Offer) => {
-    if (a.rating === b.rating) {
-      return 0;
-    }
-
-    return a.rating < b.rating ? 1 : -1;
-  },
+  byPriceUp: (a: Offer, b: Offer) => a.price - b.price,
+  byPriceDown: (a: Offer, b: Offer) => b.price - a.price,
+  byRatingDown: (a: Offer, b: Offer) => b.rating - a.rating,
 };
 
-function MainPage(): JSX.Element {
-  const [activeOffer, setActiveOffer] = useState<number | null>(null);
-
-  const { city, offers, authorizationStatus } = useAppSelector((state) => ({
-    city: state.city,
-    offers: state.offers,
-    authorizationStatus: state.authorizationStatus,
-  }));
-
-  const [sortingType, setSortingType] = useState<SortTypeProps>('default');
-
+function getData(city: string, offers: Offer[], sortingType: SortTypeProps) {
   const sortedByCityOffers = offers.filter((item) => item.city.name === city);
-
-  if (!sortedByCityOffers[0]) {
-    return <div>no data yet</div>;
-  }
   const points = sortedByCityOffers.map(({ id, location }) => ({ id, location }));
-
   const sortedOffers: Offer[] = [...sortedByCityOffers].sort(SORT_TYPE_FUNCTION[sortingType]);
 
-  const cityLocation = sortedByCityOffers[0].city.location;
+  const cityLocation = sortedByCityOffers[0]?.city.location;
+
+  return { sortedOffers, cityLocation, points };
+}
+
+function MainPage(): JSX.Element {
+
+  const { city, offers } = useAppSelector((state) => ({
+    city: state[ReducersName.city],
+    offers: state[ReducersName.offers],
+  }));
+
+  const [activeOffer, setActiveOffer] = useState<number | null>(null);
+  const [sortingType, setSortingType] = useState<SortTypeProps>('default');
+
+  const memoSetActiveOffer = useCallback(setActiveOffer, [setActiveOffer]);
+
+  const { sortedOffers, cityLocation, points } = useMemo(() =>
+    getData(city, offers, sortingType),
+  [sortingType, offers, city],
+  );
 
   return (
     <div className='page page--gray page--main'>
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <a className="header__logo-link header__logo-link--active" href="#header__logo">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-              </a>
-            </div>
-            {authorizationStatus === 'authorized'
-              ? <HeaderNavLogged />
-              : <HeaderNavNotLogged />}
-          </div>
-        </div>
-      </header>
+      <Header />
 
-      <main className={`page__main page__main--index ${sortedByCityOffers.length === 0 && 'page__main--index-empty'}`}>
+      <main
+        className={clsx('page__main', 'page__main--index', {
+          'page__main--index-empty': sortedOffers.length === 0,
+        })}
+      >
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <CitiesComponent />
+          <section className="locations container">
+            <CitiesList />
+          </section>
         </div>
         <div className="cities">
-          {sortedByCityOffers.length !== 0 ? (
+          {sortedOffers.length !== 0 ? (
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">{sortedByCityOffers.length} places to stay in {city}</b>
+                <b className="places__found">{sortedOffers.length} places to stay in {city}</b>
                 <SortMenu setSort={setSortingType} sortType={sortingType} />
-                <OffersList offers={sortedOffers} setActiveOffer={setActiveOffer} type='main' />
+                <OffersList offers={sortedOffers} setActiveOffer={memoSetActiveOffer} type='placeCard' />
               </section>
               <div className="cities__right-section">
                 <Map city={cityLocation} points={points} selectedPoint={activeOffer} type='main' />
