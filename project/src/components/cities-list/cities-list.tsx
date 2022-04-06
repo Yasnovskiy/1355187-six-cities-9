@@ -1,10 +1,10 @@
-import { cityNames } from '../../const';
+import { cityNames, ReducersName } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 
-import { setCity } from '../../store/reducers/city-reducer';
+import { setCity } from '../../store/slices/city-slice';
 
 function CitiesList() {
-  const { city } = useAppSelector((state) => state);
+  const city  = useAppSelector((state) => state[ReducersName.city]);
 
   const dispatch = useAppDispatch();
 

@@ -4,22 +4,25 @@ import { useAppDispatch } from '../../hooks';
 import { errorHandle } from '../../services/error-handle';
 import { sendCommentAction } from '../../store/api-actions';
 
+const MIN_REVIEW_LENGTH = 50;
+const MAX_STARS_RATING = 5;
+
 function CommentForm(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
 
-  const id = useParams();
+  const params = useParams();
   const ratingStars = [];
 
-  for (let value = 1; value <= 5; value++) {
+  for (let value = 1; value <= MAX_STARS_RATING; value++) {
     ratingStars.push(value);
   }
 
   const ratingStarsList = ratingStars.reverse().map((value) => <ReviewStart key={value} setRating={setRating} value={value} rating={rating} />);
 
-  const reviewLenght: boolean = review.length >= 50 && rating !== 0;
+  const reviewLenght: boolean = review.length >= MIN_REVIEW_LENGTH && rating !== 0;
 
   function cleanState() {
     setReview('');
@@ -28,12 +31,12 @@ function CommentForm(): JSX.Element {
 
   function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
-    if (id.id) {
+    if (params.id) {
       cleanState();
       dispatch(sendCommentAction( {
         rating: rating,
         comment: review,
-      }, id.id, cleanState));
+      }, params.id, cleanState));
     } else {
       errorHandle({ error: new Error() });
     }

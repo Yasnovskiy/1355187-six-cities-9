@@ -9,10 +9,10 @@ export enum AppRoute {
   Root = '/',
 }
 
-export enum AuthorizationStatus {
-  Auth = 'AUTH',
-  NoAuth = 'NO_AUTH',
-  Unknown = 'UNKNOWN',
+export enum Authorization {
+  Authorized = 'authorized',
+  Unauthorized = 'unauthorized',
+  Unknown = 'unknown',
 }
 
 export enum APIRoute {
@@ -21,6 +21,17 @@ export enum APIRoute {
   Login = '/login',
   Logout = '/logout',
   Offers = '/hotels',
+}
+
+export enum ReducersName {
+  auth = 'AUTH',
+  city = 'CITY',
+  comments = 'COMMENTS',
+  favorites = 'FAVORITES',
+  offersNearby = 'OFFERS_NEARBY',
+  offers = 'OFFERS',
+  room = 'ROOM',
+  user = 'USER',
 }
 
 export enum HTTP_CODE {
@@ -35,24 +46,6 @@ export const DEFAULT_ROOM_DATA = {
   room: null,
 };
 
-export const DEFAULT_USER = {
-  avatarUrl: '',
-  email: '',
-  id: 0,
-  isPro: false,
-  name: '',
-  token: '',
-};
-
-export const MIN_REVIEW_LENGTH = 50;
-
-export const MAX_STARS_RATING = 5;
-
 export const cityNames = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'];
 
 export const sortName: SortTypeProps[] = ['default', 'byPriceUp', 'byPriceDown', 'byRatingDown'];
-
-export enum Pins {
-  Default = 'pin.svg',
-  Active = 'pin-active.svg',
-}

@@ -1,6 +1,6 @@
 import OffersList from '../offers-list/offers-list';
 import { Offer } from '../../types/offers';
-import { Link } from 'react-router-dom';
+import LocationLink from '../location-link/location-link';
 
 type FavoriteLocationItemProps = {
   cityName: string,
@@ -13,12 +13,10 @@ function FavoriteLocationItem({cityName, offers}: FavoriteLocationItemProps): JS
     <li className="favorites__locations-items">
       <div className="favorites__locations locations locations--current">
         <div className="locations__item">
-          <Link className="locations__item-link" to="/">
-            <span>{cityName}</span>
-          </Link>
+          <LocationLink cityName={cityName}/>
         </div>
       </div>
-      <OffersList offers={offers} type='favorites' />
+      <OffersList offers={offers} type='favorite' />
     </li>
   );
 }
