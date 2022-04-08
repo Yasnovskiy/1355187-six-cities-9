@@ -2,15 +2,17 @@ import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
 
 
-import { AppRoute, ReducersName } from '../../const';
+import { AppRoute } from '../../const';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 
 import { changeOfferStatusAction } from '../../store/api-actions';
 import { PlaceCardType } from '../../types/reviews';
+import { getAuthorizationStatusSelector } from '../../store/selectors/auth-selector';
 
 function Bookmark(props: { hotelId: number, isFavorite: boolean, type: PlaceCardType }): JSX.Element {
   const dispatch = useAppDispatch();
-  const authorizationStatus = useAppSelector((state) => state[ReducersName.auth]);
+
+  const authorizationStatus = useAppSelector(getAuthorizationStatusSelector);
 
   const { hotelId, isFavorite, type } = props;
 

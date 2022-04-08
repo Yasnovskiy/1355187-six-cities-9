@@ -1,13 +1,14 @@
 import { SyntheticEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { finishAuthAction } from '../../store/api-actions';
-import { AppDispatch } from '../../types/state';
+import { getEmailSelector } from '../../store/selectors/email-selector';
 
-function HeaderNavLogged(props: {dispatch: AppDispatch, email: string}): JSX.Element {
+function HeaderNavLogged(): JSX.Element {
+  const dispatch = useAppDispatch();
 
-  const {dispatch, email} = props;
-
+  const email = useAppSelector(getEmailSelector);
 
   function handleClick(e: SyntheticEvent) {
     e.preventDefault();
@@ -18,12 +19,10 @@ function HeaderNavLogged(props: {dispatch: AppDispatch, email: string}): JSX.Ele
     <nav className="header__nav">
       <ul className="header__nav-list">
         <li className="header__nav-item user">
-          <Link to={AppRoute.Favorites}>
-            <a className="header__nav-link header__nav-link--profile" href="#profile">
-              <div className="header__avatar-wrapper user__avatar-wrapper">
-              </div>
-              <span className="header__user-name user__name">{email}</span>
-            </a>
+          <Link className="header__nav-link header__nav-link--profile" to={AppRoute.Favorites}>
+            <div className="header__avatar-wrapper user__avatar-wrapper">
+            </div>
+            <span className="header__user-name user__name">{email}</span>
           </Link>
         </li>
         <li className="header__nav-item">

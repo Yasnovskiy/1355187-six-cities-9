@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Offer, SortTypeProps } from '../../types/offers';
 import clsx from 'clsx';
 
@@ -8,8 +8,11 @@ import SortMenu from '../../components/sort-menu/sort-menu';
 import MainEmptyScreen from '../../components/main-empty-screen/main-empty-screen';
 import { useAppSelector } from '../../hooks';
 import Header from '../../components/header/header';
-import { ReducersName } from '../../const';
 import CitiesList from '../../components/cities-list/cities-list';
+import store from '../../store';
+import { fetchOffersAction } from '../../store/api-actions';
+import { getCitySelector } from '../../store/selectors/city-selector';
+import { getOffersSelector } from '../../store/selectors/offers-selector';
 
 const SORT_TYPE_FUNCTION = {
   default: () => 0,
@@ -17,6 +20,8 @@ const SORT_TYPE_FUNCTION = {
   byPriceDown: (a: Offer, b: Offer) => b.price - a.price,
   byRatingDown: (a: Offer, b: Offer) => b.rating - a.rating,
 };
+
+store.dispatch(fetchOffersAction);
 
 function getData(city: string, offers: Offer[], sortingType: SortTypeProps) {
   const sortedByCityOffers = offers.filter((item) => item.city.name === city);
@@ -29,16 +34,13 @@ function getData(city: string, offers: Offer[], sortingType: SortTypeProps) {
 }
 
 function MainPage(): JSX.Element {
-
-  const { city, offers } = useAppSelector((state) => ({
-    city: state[ReducersName.city],
-    offers: state[ReducersName.offers],
-  }));
+  const city = useAppSelector(getCitySelector);
+  const offers = useAppSelector(getOffersSelector);
 
   const [activeOffer, setActiveOffer] = useState<number | null>(null);
   const [sortingType, setSortingType] = useState<SortTypeProps>('default');
 
-  const memoSetActiveOffer = useCallback(setActiveOffer, [setActiveOffer]);
+  // const memoSetActiveOffer = useCallback(setActiveOffer, [setActiveOffer]);
 
   const { sortedOffers, cityLocation, points } = useMemo(() =>
     getData(city, offers, sortingType),
@@ -67,7 +69,7 @@ function MainPage(): JSX.Element {
                 <h2 className="visually-hidden">Places</h2>
                 <b className="places__found">{sortedOffers.length} places to stay in {city}</b>
                 <SortMenu setSort={setSortingType} sortType={sortingType} />
-                <OffersList offers={sortedOffers} setActiveOffer={memoSetActiveOffer} type='placeCard' />
+                <OffersList offers={sortedOffers} setActiveOffer={setActiveOffer} type='placeCard' />
               </section>
               <div className="cities__right-section">
                 <Map city={cityLocation} points={points} selectedPoint={activeOffer} type='main' />

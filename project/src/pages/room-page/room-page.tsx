@@ -9,11 +9,12 @@ import { useAppSelector, useAppDispatch } from '../../hooks';
 import { useEffect } from 'react';
 import { fetchRoomDataAction } from '../../store/api-actions';
 import Header from '../../components/header/header';
-import { ReducersName } from '../../const';
 import PlaceCardMark from '../../components/place-card-mark/place-card-mark';
 import Bookmark from '../../components/bookmark/bookmark';
 import LoadingScreen from '../../components/loading-screen/loading-screen';
 import { LocationOffer } from '../../types/offers';
+import { getRoomSelector } from '../../store/selectors/room-selector';
+import { getOffersNearbySelector } from '../../store/selectors/offers-nearby-selector';
 
 type Point = {
   id: number;
@@ -30,10 +31,8 @@ function RoomPage(): JSX.Element {
     }
   }, [dispatch, param.id]);
 
-  const { room, offersNearby } = useAppSelector((state) => ({
-    room: state[ReducersName.room],
-    offersNearby: state[ReducersName.offersNearby],
-  }));
+  const room = useAppSelector(getRoomSelector);
+  const offersNearby = useAppSelector(getOffersNearbySelector);
 
   if (!room) {
     return <LoadingScreen />;

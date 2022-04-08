@@ -49,7 +49,7 @@ export const authAction = (authData: AuthDataType) => (
 };
 
 export const checkAuthAction = (nextDispatch: Dispatch, getState: () => StateType, api: AxiosInstance) => {
-  toast.promise(api.get(APIRoute.Login)
+  api.get(APIRoute.Login)
     .then((response: AxiosResponse) => {
       nextDispatch(successfulAuth(response.data));
     })
@@ -57,10 +57,7 @@ export const checkAuthAction = (nextDispatch: Dispatch, getState: () => StateTyp
       removeToken();
       errorHandle(error);
       nextDispatch(unSuccessfulAuth());
-    }),
-  {
-    pending: 'Loading...',
-  });
+    });
 };
 
 export const changeOfferStatusAction = (hotelId: number, isFavorite: boolean, actionType: PlaceCardType) =>

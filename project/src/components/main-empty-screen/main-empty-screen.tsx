@@ -1,8 +1,8 @@
-import { ReducersName } from '../../const';
 import { useAppSelector } from '../../hooks';
+import { getCitySelector } from '../../store/selectors/city-selector';
 
 function MainEmptyScreen(): JSX.Element {
-  const city = useAppSelector((state) => state[ReducersName.city]);
+  const city = useAppSelector(getCitySelector);
 
   return (
     <div className="cities__places-container cities__places-container--empty container">

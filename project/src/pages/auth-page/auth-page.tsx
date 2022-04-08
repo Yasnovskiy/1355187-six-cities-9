@@ -1,25 +1,25 @@
 import { SyntheticEvent, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AppRoute, ReducersName } from '../../const';
+import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authAction } from '../../store/api-actions';
 import LocationLink from '../../components/location-link/location-link';
+import { getAuthorizationStatusSelector } from '../../store/selectors/auth-selector';
+import { getCitySelector } from '../../store/selectors/city-selector';
 
 function AuthPage(): JSX.Element {
-
   const dispatch = useAppDispatch();
-  const {authStatus, city}= useAppSelector((state) => ({
-    authStatus: state[ReducersName.auth],
-    city: state[ReducersName.city],
-  }));
+
+  const AuthorizationStatus = useAppSelector(getAuthorizationStatusSelector);
+  const city = useAppSelector(getCitySelector);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authStatus === 'authorized') {
+    if (AuthorizationStatus === 'authorized') {
       navigate(AppRoute.Root);
     }
-  }, [authStatus, navigate]);
+  }, [AuthorizationStatus, navigate]);
 
 
   function handleSubmit(evt: SyntheticEvent) {
@@ -37,10 +37,8 @@ function AuthPage(): JSX.Element {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <Link to={AppRoute.Root}>
-                <a className="header__logo-link" href="main.html">
-                  <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-                </a>
+              <Link className="header__logo-link" to={AppRoute.Root}>
+                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
               </Link>
             </div>
           </div>

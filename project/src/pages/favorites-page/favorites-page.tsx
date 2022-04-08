@@ -2,19 +2,21 @@ import { useLayoutEffect } from 'react';
 
 import clsx from 'clsx';
 
-import { ReducersName } from '../../const';
+import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchFavoritesAction } from '../../store/api-actions';
 
 import Header from '../../components/header/header';
 import FavoriteLocationList from '../../components/favorite-location-list/favorite-location-list';
 import FavoritesEmptyScreen from '../../components/favorites-empty-screen/favorites-empty-screen';
+import { Link } from 'react-router-dom';
+import { getOffersSelector } from '../../store/selectors/offers-selector';
 
 function FavoritesPage(): JSX.Element {
 
   const dispatch = useAppDispatch();
 
-  const offers = useAppSelector((state) => state[ReducersName.favorites]);
+  const offers = useAppSelector(getOffersSelector);
 
   const isFaviritesEmpty = offers.length === 0;
 
@@ -40,9 +42,9 @@ function FavoritesPage(): JSX.Element {
         </div>
       </main>
       <footer className="footer container">
-        <a className="footer__logo-link" href="/">
+        <Link className="footer__logo-link" to={AppRoute.Root}>
           <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
-        </a>
+        </Link>
       </footer>
     </>
   );

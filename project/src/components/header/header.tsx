@@ -1,35 +1,31 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HeaderNavLogged from '../header-nav-logged/header-nav-logged';
 import HeaderNavNotLogged from '../header-nav-not-logged/header-nav-not-logged';
-import { AppRoute, ReducersName } from '../../const';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { AppRoute, Authorization } from '../../const';
+import { useAppSelector } from '../../hooks';
+import { getAuthorizationStatusSelector } from '../../store/selectors/auth-selector';
+import { memo } from 'react';
 
 function Header(): JSX.Element {
-  const dispatch = useAppDispatch();
 
-  const {authorizationStatus, email} = useAppSelector((state) => ({
-    authorizationStatus: state[ReducersName.auth],
-    email: state[ReducersName.user].email,
-  }));
+  const  authorizationStatus  = useAppSelector(getAuthorizationStatusSelector);
 
-  const isAuthorisedUser = authorizationStatus === 'authorized';
+  const isAuthorisedUser = authorizationStatus === Authorization.Authorized;
 
   return (
     <header className="header">
       <div className="container">
         <div className="header__wrapper">
           <div className="header__left">
-            <Link to={AppRoute.Root}>
-              <a className="header__logo-link" href="#main">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-              </a>
+            <Link className="header__logo-link" to={AppRoute.Root}>
+              <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
             </Link>
           </div>
-          {isAuthorisedUser ? <HeaderNavLogged dispatch={dispatch} email={email} /> : <HeaderNavNotLogged />}
+          {isAuthorisedUser ? <HeaderNavLogged /> : <HeaderNavNotLogged />}
         </div>
       </div>
     </header>
   );
 }
 
-export default Header;
+export default memo(Header);
