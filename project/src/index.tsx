@@ -7,10 +7,8 @@ import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import  store  from './store';
-import { fetchOffersAction, checkAuthAction } from './store/api-actions';
+import { checkAuthAction } from './store/api-actions';
 
-// надо удалить комментарий в 8 модуле ( делаю это для доступа )
-store.dispatch(fetchOffersAction);
 store.dispatch(checkAuthAction);
 
 ReactDOM.render(
