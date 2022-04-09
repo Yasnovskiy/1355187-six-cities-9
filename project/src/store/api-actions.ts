@@ -53,9 +53,8 @@ export const checkAuthAction = (nextDispatch: Dispatch, getState: () => StateTyp
     .then((response: AxiosResponse) => {
       nextDispatch(successfulAuth(response.data));
     })
-    .catch((error) => {
+    .catch(() => {
       removeToken();
-      errorHandle(error);
       nextDispatch(unSuccessfulAuth());
     });
 };

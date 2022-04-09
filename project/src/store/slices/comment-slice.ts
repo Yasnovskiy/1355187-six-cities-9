@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { setRoomData } from './room-slice';
-import { Comment, RoomDataType} from '../../types/offers';
+import { RoomDataType} from '../../types/offers';
 import { ReducersName } from '../../const';
+import { Comment } from '../../types/reviews';
 
 const commentsSlice = createSlice({
   name: ReducersName.comments,

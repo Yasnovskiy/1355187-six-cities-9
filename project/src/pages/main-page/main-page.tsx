@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Offer, SortTypeProps } from '../../types/offers';
 import clsx from 'clsx';
-
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import SortMenu from '../../components/sort-menu/sort-menu';
@@ -21,8 +20,6 @@ const SORT_TYPE_FUNCTION = {
   byRatingDown: (a: Offer, b: Offer) => b.rating - a.rating,
 };
 
-store.dispatch(fetchOffersAction);
-
 function getData(city: string, offers: Offer[], sortingType: SortTypeProps) {
   const sortedByCityOffers = offers.filter((item) => item.city.name === city);
   const points = sortedByCityOffers.map(({ id, location }) => ({ id, location }));
@@ -40,12 +37,12 @@ function MainPage(): JSX.Element {
   const [activeOffer, setActiveOffer] = useState<number | null>(null);
   const [sortingType, setSortingType] = useState<SortTypeProps>('default');
 
-  // const memoSetActiveOffer = useCallback(setActiveOffer, [setActiveOffer]);
-
   const { sortedOffers, cityLocation, points } = useMemo(() =>
     getData(city, offers, sortingType),
   [sortingType, offers, city],
   );
+
+  useEffect(() => store.dispatch(fetchOffersAction), []);
 
   return (
     <div className='page page--gray page--main'>
