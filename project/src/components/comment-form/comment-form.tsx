@@ -34,15 +34,19 @@ function CommentForm(): JSX.Element {
   function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
     setIsFormLocked(true);
-    if (params.id) {
-      cleanState();
-      dispatch(sendCommentAction( {
-        rating: rating,
-        comment: review,
-      }, params.id, cleanState));
-    } else {
+    if (!params.id) {
       errorHandle({ error: new Error() });
     }
+
+    cleanState();
+    dispatch(sendCommentAction(
+      {
+        rating: rating,
+        comment: review,
+      },
+      params.id,
+      cleanState,
+    ));
   }
 
   return (
@@ -78,7 +82,7 @@ type ReviewStartProps = {
 
 const labelTitleArray: string[] = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
 
-function ReviewStart({ value, rating, setRating}: ReviewStartProps): JSX.Element {
+function ReviewStart({ value, rating, setRating }: ReviewStartProps): JSX.Element {
 
   return (
     <>

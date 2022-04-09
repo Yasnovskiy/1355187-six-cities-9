@@ -6,7 +6,7 @@ import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import Rating from '../../components/rating/rating';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchRoomDataAction } from '../../store/api-actions';
 import Header from '../../components/header/header';
 import PlaceCardMark from '../../components/place-card-mark/place-card-mark';
@@ -15,6 +15,7 @@ import LoadingScreen from '../../components/loading-screen/loading-screen';
 import { LocationOffer } from '../../types/offers';
 import { getRoomSelector } from '../../store/selectors/room-selector';
 import { getOffersNearbySelector } from '../../store/selectors/offers-nearby-selector';
+import NotFoundPage from '../not-found-page/not-found-page';
 
 type Point = {
   id: number;
@@ -25,17 +26,30 @@ function RoomPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const param = useParams();
 
-  useEffect(() => {
-    if (param.id) {
-      dispatch(fetchRoomDataAction(param.id));
+  const [isDataLoading, setIsDataLoading] = useState(false);
+
+  const featchData = async () => {
+    if (!param.id) {
+      return;
     }
-  }, [dispatch, param.id]);
+
+    await dispatch(fetchRoomDataAction(param.id));
+    setIsDataLoading(true);
+  };
+
+  useEffect(() => {
+    featchData();
+  }, [param.id]);
 
   const room = useAppSelector(getRoomSelector);
   const offersNearby = useAppSelector(getOffersNearbySelector);
 
-  if (!room) {
+  if (!isDataLoading) {
     return <LoadingScreen />;
+  }
+
+  if (!room) {
+    return <NotFoundPage />;
   }
 
 
@@ -43,7 +57,7 @@ function RoomPage(): JSX.Element {
   const points: Point[] = [...offersNearby, room].map(({ id, location }) => ({ id, location }));
 
   const {
-    id, isFavorite ,images, title, rating, isPremium, type, bedrooms, maxAdults, price, goods, description, host,
+    id, isFavorite, images, title, rating, isPremium, type, bedrooms, maxAdults, price, goods, description, host,
   } = room;
 
   const proActiveClass: string = host.isPro ? 'property__avatar-wrapper--pro' : '';
@@ -67,7 +81,7 @@ function RoomPage(): JSX.Element {
           )}
           <div className="property__container container">
             <div className="property__wrapper">
-              {isPremium && <PlaceCardMark type="room"/>}
+              {isPremium && <PlaceCardMark type="room" />}
               <div className="property__name-wrapper">
                 <h1 className="property__name">
                   {title}

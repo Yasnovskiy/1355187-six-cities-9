@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Offer, SortTypeProps } from '../../types/offers';
 import clsx from 'clsx';
 import Map from '../../components/map/map';
@@ -42,7 +42,7 @@ function MainPage(): JSX.Element {
   [sortingType, offers, city],
   );
 
-  useEffect(() => store.dispatch(fetchOffersAction), []);
+  store.dispatch(fetchOffersAction());
 
   return (
     <div className='page page--gray page--main'>
