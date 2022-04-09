@@ -6,6 +6,11 @@ import { authAction } from '../../store/api-actions';
 import LocationLink from '../../components/location-link/location-link';
 import { getAuthorizationStatusSelector } from '../../store/selectors/auth-selector';
 import { getCitySelector } from '../../store/selectors/city-selector';
+import { toast } from 'react-toastify';
+
+const passwordWarningText = 'Password should contain minimum one letter and one number';
+
+const validatePassword = (password: string) => password.match(/[A-Za-z]/) !== null && password.match(/[0-9]/) !== null;
 
 function AuthPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -26,9 +31,12 @@ function AuthPage(): JSX.Element {
     evt.preventDefault();
     if (evt.target instanceof HTMLFormElement) {
       const formData = new FormData(evt.target);
-      const email = formData.get('email');
-      const password = formData.get('password');
-      dispatch(authAction({ email, password }));
+      const authData = {
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+      };
+
+      validatePassword(authData.password) ? dispatch(authAction(authData)) : toast.warn(passwordWarningText);
     }
   }
   return (
