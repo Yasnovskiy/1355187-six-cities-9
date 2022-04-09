@@ -12,6 +12,7 @@ function CommentForm(): JSX.Element {
 
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
+  const [isFormLocked, setIsFormLocked] = useState(false);
 
   const params = useParams();
   const ratingStars = [];
@@ -27,10 +28,12 @@ function CommentForm(): JSX.Element {
   function cleanState() {
     setReview('');
     setRating(0);
+    setIsFormLocked(false);
   }
 
   function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
+    setIsFormLocked(true);
     if (params.id) {
       cleanState();
       dispatch(sendCommentAction( {
@@ -55,13 +58,13 @@ function CommentForm(): JSX.Element {
         {ratingStarsList}
       </div>
 
-      <textarea className="reviews__textarea form__textarea" id="review" onChange={(evt) => setReview(evt.target.value)} value={review} name="review" placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
+      <textarea className="reviews__textarea form__textarea" id="review" onChange={(evt) => setReview(evt.target.value)} value={review} name="review" placeholder="Tell how was your stay, what you like and what can be improved" maxLength={300}></textarea>
 
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={!reviewLenght}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={!reviewLenght || isFormLocked}>Submit</button>
       </div>
     </form>
   );
