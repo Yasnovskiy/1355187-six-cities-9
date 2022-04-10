@@ -13,7 +13,8 @@ import { setToken, removeToken } from '../services/token';
 import { DEFAULT_ROOM_DATA } from '../const';
 import { redirectToRoute } from './action';
 import { PlaceCardType } from '../types/reviews';
-import { AuthDataType, CommentFormDataType } from '../types/server';
+import { AuthDataType } from '../types/server';
+import { ChangeOfferStatusAction, SendCommentAction } from '../types/api-action';
 
 const storeActionMapping = {
   'placeCard': replaceOffer,
@@ -53,7 +54,7 @@ export const authAction = createAsyncThunk(
 
 export const checkAuthAction = createAsyncThunk(
   `${ReducersName.user}/checkAuthStatus`,
-  async (_arg ,thunkAPI) => {
+  async (_arg, thunkAPI) => {
     const api = thunkAPI.extra as AxiosInstance;
 
     await toast.promise(
@@ -77,8 +78,9 @@ export const checkAuthAction = createAsyncThunk(
 
 export const changeOfferStatusAction = createAsyncThunk(
   `${ReducersName.user}/checkAuthStatus`,
-  async ( hotelId: number, isFavorite: boolean, actionType: PlaceCardType, thunkAPI) => {
+  async ({ hotelId, newStatus: isFavorite, type }: ChangeOfferStatusAction, thunkAPI) => {
     const status = isFavorite ? 1 : 0;
+
     const path = `${APIRoute.Favorites}/${hotelId}/${status}`;
     const api = thunkAPI.extra as AxiosInstance;
 
@@ -88,9 +90,9 @@ export const changeOfferStatusAction = createAsyncThunk(
         try {
           const { data } = await api.post(path);
 
-          const storeAction = getStoreAction(actionType);
+          const storeAction = getStoreAction(type);
           thunkAPI.dispatch(storeAction(data));
-        } catch(error) {
+        } catch (error) {
           errorHandle(error);
         }
       },
@@ -103,7 +105,7 @@ export const changeOfferStatusAction = createAsyncThunk(
 
 export const fetchFavoritesAction = createAsyncThunk(
   `${ReducersName.favorites}/fetchFavorites`,
-  async (_arg ,thunkAPI) => {
+  async (_arg, thunkAPI) => {
     const api = thunkAPI.extra as AxiosInstance;
 
     await toast.promise(
@@ -113,7 +115,7 @@ export const fetchFavoritesAction = createAsyncThunk(
           const { data } = await api.get(APIRoute.Favorites);
 
           thunkAPI.dispatch(setFavorites(data));
-        } catch(error) {
+        } catch (error) {
           errorHandle(error);
         }
       },
@@ -126,24 +128,16 @@ export const fetchFavoritesAction = createAsyncThunk(
 
 export const fetchOffersAction = createAsyncThunk(
   `${ReducersName.favorites}/fetchOffers`,
-  async (_arg ,thunkAPI) => {
+  async (_arg, thunkAPI) => {
     const api = thunkAPI.extra as AxiosInstance;
 
-    await toast.promise(
-      async () => {
+    try {
+      const { data } = await api.get(APIRoute.Offers);
 
-        try {
-          const { data } = await api.get(APIRoute.Offers);
-
-          thunkAPI.dispatch(setOffers(data));
-        } catch(error) {
-          errorHandle(error);
-        }
-      },
-      {
-        pending: 'Loading...',
-      },
-    );
+      thunkAPI.dispatch(setOffers(data));
+    } catch (error) {
+      errorHandle(error);
+    }
   },
 );
 
@@ -154,45 +148,37 @@ export const fetchRoomDataAction = createAsyncThunk(
     const roomData = DEFAULT_ROOM_DATA;
     const api = thunkAPI.extra as AxiosInstance;
 
-    await toast.promise(
-      async () => {
+    try {
+      const resRoom = await api.get(`${APIRoute.Offers}/${hotelId}`);
+      roomData.room = resRoom.data;
 
-        try {
-          const resRoom = await api.get(`${APIRoute.Offers}/${hotelId}`);
-          roomData.room = resRoom.data;
+      const resNearby = await api.get(`${APIRoute.Offers}/${hotelId}/nearby`);
+      roomData.offersNearby = resNearby.data;
 
-          const resNearby = await api.get(`${APIRoute.Offers}/${hotelId}/nearby`);
-          roomData.offersNearby = resNearby.data;
+      const resComment = await api.get(`${APIRoute.Comments}/${hotelId}`);
+      roomData.comments = resComment.data;
 
-          const resComment = await api.get(`${APIRoute.Comments}/${hotelId}`);
-          roomData.comments = resComment.data;
+      thunkAPI.dispatch(setRoomData(roomData));
 
-          thunkAPI.dispatch(setRoomData(roomData));
-
-        } catch (error) {
-          errorHandle(error);
-          thunkAPI.dispatch(setRoomData(DEFAULT_ROOM_DATA));
-          thunkAPI.dispatch(redirectToRoute(AppRoute.NotFound));
-        }
-      },
-      {
-        pending: 'Loading...',
-      },
-    );
+    } catch (error) {
+      errorHandle(error);
+      thunkAPI.dispatch(setRoomData(DEFAULT_ROOM_DATA));
+      thunkAPI.dispatch(redirectToRoute(AppRoute.NotFound));
+    }
   },
 );
 
 export const finishAuthAction = createAsyncThunk(
   `${ReducersName.favorites}/fetchOffers`,
-  async (_arg ,thunkAPI) => {
+  async (_arg, thunkAPI) => {
     const api = thunkAPI.extra as AxiosInstance;
 
     try {
-      await toast.promise( api.delete(APIRoute.Logout), {pending: 'Loading...'});
+      await toast.promise(api.delete(APIRoute.Logout), { pending: 'Loading...' });
       removeToken();
       thunkAPI.dispatch(unSuccessfulAuth());
       thunkAPI.dispatch(redirectToRoute(AppRoute.Root));
-    } catch(error) {
+    } catch (error) {
       errorHandle(error);
     }
   },
@@ -200,12 +186,12 @@ export const finishAuthAction = createAsyncThunk(
 
 export const sendCommentAction = createAsyncThunk(
   `${ReducersName.favorites}/changeOfferFavoriteStatus`,
-    async ( {rating, comment }: CommentFormDataType, hotelId: string, restoreFormData: (formData: CommentFormDataType) => void , thunkAPI) => {
+  async ({ rating, comment, hotelId, restoreFormData }: SendCommentAction, thunkAPI) => {
 
     const api = thunkAPI.extra as AxiosInstance;
     try {
 
-      const {data} = await toast.promise(api.post(`${APIRoute.Comments}/${hotelId}`, {rating, comment }),
+      const { data } = await toast.promise(api.post(`${APIRoute.Comments}/${hotelId}`, { rating, comment }),
         {
           pending: 'Loading...',
         });
@@ -214,7 +200,7 @@ export const sendCommentAction = createAsyncThunk(
 
     } catch (error) {
       errorHandle(error);
-      restoreFormData({rating, comment });
+      restoreFormData({ rating, comment });
     }
   },
 );
