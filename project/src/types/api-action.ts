@@ -10,5 +10,6 @@ export type SendCommentAction = {
   rating: number | null,
   comment: string;
   hotelId: string | undefined;
-  restoreFormData: ({rating, comment}: {rating: number | null; comment: string;}) => void;
+  restoreFormData: () => void;
+  setIsFormLocked: () => void,
 };
