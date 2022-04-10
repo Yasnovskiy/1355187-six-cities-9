@@ -191,7 +191,7 @@ export const sendCommentAction = createAsyncThunk(
 
     try {
 
-      const { data } = await toast.promise(api.post(`${APIRoute.Favorites}/${hotelId}`, { rating, comment }),
+      const { data } = await toast.promise(api.post(`${APIRoute.Comments}/${hotelId}`, { rating, comment }),
         {
           pending: 'Loading...',
         });
