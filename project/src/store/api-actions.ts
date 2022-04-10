@@ -101,23 +101,6 @@ export const changeOfferStatusAction = createAsyncThunk(
   },
 );
 
-// export const changeOfferStatusAction = (hotelId: number, isFavorite: boolean, actionType: PlaceCardType) =>
-//   (nextDispatch: Dispatch, getState: () => StateType, api: AxiosInstance) => {
-//     const status = isFavorite ? 1 : 0;
-//     const path = `${APIRoute.Favorites}/${hotelId}/${status}`;
-//     toast.promise(api.post(path)
-//       .then((response: AxiosResponse) => {
-//         const storeAction = getStoreAction(actionType);
-//         nextDispatch(storeAction(response.data));
-//       })
-//       .catch((error) => {
-//         errorHandle(error);
-//       }),
-//     {
-//       pending: 'Loading...',
-//     });
-//   };
-
 export const fetchFavoritesAction = createAsyncThunk(
   `${ReducersName.favorites}/fetchFavorites`,
   async (_arg ,thunkAPI) => {
