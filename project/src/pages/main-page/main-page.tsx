@@ -1,17 +1,17 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Offer, SortTypeProps } from '../../types/offers';
 import clsx from 'clsx';
 import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import SortMenu from '../../components/sort-menu/sort-menu';
 import MainEmptyScreen from '../../components/main-empty-screen/main-empty-screen';
-import { useAppSelector } from '../../hooks';
+import { useAppSelector, useAppDispatch } from '../../hooks';
 import Header from '../../components/header/header';
 import CitiesList from '../../components/cities-list/cities-list';
-import store from '../../store';
 import { fetchOffersAction } from '../../store/api-actions';
 import { getCitySelector } from '../../store/selectors/city-selector';
 import { getOffersSelector } from '../../store/selectors/offers-selector';
+import LoadingScreen from '../../components/loading-screen/loading-screen';
 
 const SORT_TYPE_FUNCTION = {
   default: () => 0,
@@ -31,18 +31,26 @@ function getData(city: string, offers: Offer[], sortingType: SortTypeProps) {
 }
 
 function MainPage(): JSX.Element {
+  const dispatch = useAppDispatch();
   const city = useAppSelector(getCitySelector);
   const offers = useAppSelector(getOffersSelector);
 
   const [activeOffer, setActiveOffer] = useState<number | null>(null);
   const [sortingType, setSortingType] = useState<SortTypeProps>('default');
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   const { sortedOffers, cityLocation, points } = useMemo(() =>
     getData(city, offers, sortingType),
   [sortingType, offers, city],
   );
 
-  store.dispatch(fetchOffersAction());
+  const featchData = async () => {
+
+    await dispatch(fetchOffersAction());
+    setIsDataLoaded(true);
+  };
+
+  useEffect(() => { featchData(); }, []);
 
   return (
     <div className='page page--gray page--main'>
@@ -60,7 +68,7 @@ function MainPage(): JSX.Element {
           </section>
         </div>
         <div className="cities">
-          {sortedOffers.length !== 0 ? (
+          {sortedOffers.length !== 0 && isDataLoaded && (
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
@@ -72,7 +80,14 @@ function MainPage(): JSX.Element {
                 <Map city={cityLocation} points={points} selectedPoint={activeOffer} type='main' />
               </div>
             </div>
-          ) : <MainEmptyScreen />}
+          )}
+          {sortedOffers.length === 0 && isDataLoaded && (
+            <MainEmptyScreen />
+          )}
+
+          {!isDataLoaded && (
+            <LoadingScreen />
+          )}
         </div>
       </main>
     </div>

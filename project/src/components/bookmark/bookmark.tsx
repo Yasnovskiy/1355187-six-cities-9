@@ -25,7 +25,8 @@ function Bookmark(props: { hotelId: number, isFavorite: boolean, type: PlaceCard
       navigate(AppRoute.Login);
     } else {
       const newStatus = !isFavorite;
-      dispatch(changeOfferStatusAction(hotelId, newStatus, type));
+      dispatch(changeOfferStatusAction({hotelId, newStatus, type}));
+
     }
   }
 

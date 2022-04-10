@@ -12,7 +12,7 @@ function HeaderNavLogged(): JSX.Element {
 
   function handleClick(e: SyntheticEvent) {
     e.preventDefault();
-    dispatch(finishAuthAction);
+    dispatch(finishAuthAction());
   }
 
   return (

@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import  store  from './store';
 import { checkAuthAction } from './store/api-actions';
 
-store.dispatch(checkAuthAction);
+store.dispatch(checkAuthAction());
 
 ReactDOM.render(
   <React.StrictMode>

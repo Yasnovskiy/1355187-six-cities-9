@@ -43,9 +43,9 @@ function CommentForm(): JSX.Element {
       {
         rating: rating,
         comment: review,
+        hotelId: params.id,
+        restoreFormData: cleanState,
       },
-      params.id,
-      cleanState,
     ));
   }
 
