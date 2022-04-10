@@ -1,12 +1,13 @@
-import { SyntheticEvent, useEffect } from 'react';
+import { SyntheticEvent, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authAction } from '../../store/api-actions';
-import LocationLink from '../../components/location-link/location-link';
 import { getAuthorizationStatusSelector } from '../../store/selectors/auth-selector';
 import { getCitySelector } from '../../store/selectors/city-selector';
 import { toast } from 'react-toastify';
+import { getRandomCity } from '../../utils';
+import { setCity } from '../../store/slices/city-slice';
 
 const passwordWarningText = 'Password should contain minimum one letter and one number';
 
@@ -39,6 +40,14 @@ function AuthPage(): JSX.Element {
       validatePassword(authData.password) ? dispatch(authAction(authData)) : toast.warn(passwordWarningText);
     }
   }
+
+  const [randomCity, setRandomCity] = useState(city);
+
+  useEffect(() => {
+    const cityRandom = getRandomCity();
+    setRandomCity(cityRandom);
+  }, []);
+
   return (
     <div className="page page--gray page--login">
       <header className="header">
@@ -71,7 +80,13 @@ function AuthPage(): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <LocationLink cityName={city as string} />
+              <Link
+                to={AppRoute.Root}
+                className="locations__item-link"
+                onClick={() => dispatch(setCity(randomCity))}
+              >
+                <span>{randomCity}</span>
+              </Link>
             </div>
           </section>
         </div>
