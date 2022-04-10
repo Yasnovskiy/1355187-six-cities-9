@@ -1,20 +1,42 @@
-import { SyntheticEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { SyntheticEvent, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../const';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { authAction } from '../../store/api-actions';
+import LocationLink from '../../components/location-link/location-link';
+import { getAuthorizationStatusSelector } from '../../store/selectors/auth-selector';
+import { getCitySelector } from '../../store/selectors/city-selector';
+import { toast } from 'react-toastify';
+
+const passwordWarningText = 'Password should contain minimum one letter and one number';
+
+const validatePassword = (password: string) => password.match(/[A-Za-z]/) !== null && password.match(/[0-9]/) !== null;
 
 function AuthPage(): JSX.Element {
-
   const dispatch = useAppDispatch();
+
+  const AuthorizationStatus = useAppSelector(getAuthorizationStatusSelector);
+  const city = useAppSelector(getCitySelector);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (AuthorizationStatus === 'authorized') {
+      navigate(AppRoute.Root);
+    }
+  }, [AuthorizationStatus, navigate]);
+
 
   function handleSubmit(evt: SyntheticEvent) {
     evt.preventDefault();
     if (evt.target instanceof HTMLFormElement) {
       const formData = new FormData(evt.target);
-      const email = formData.get('email');
-      const password = formData.get('password');
-      dispatch(authAction({ email, password }));
+      const authData = {
+        email: formData.get('email') as string,
+        password: formData.get('password') as string,
+      };
+
+      validatePassword(authData.password) ? dispatch(authAction(authData)) : toast.warn(passwordWarningText);
     }
   }
   return (
@@ -23,10 +45,8 @@ function AuthPage(): JSX.Element {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <Link to={AppRoute.Root}>
-                <a className="header__logo-link" href="main.html">
-                  <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-                </a>
+              <Link className="header__logo-link" to={AppRoute.Root}>
+                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
               </Link>
             </div>
           </div>
@@ -51,9 +71,7 @@ function AuthPage(): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="/">
-                <span>Amsterdam</span>
-              </a>
+              <LocationLink cityName={city as string} />
             </div>
           </section>
         </div>

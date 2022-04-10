@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import Reviews from '../../components/reviews/reviews';
 import Map from '../../components/map/map';
@@ -6,67 +6,72 @@ import Map from '../../components/map/map';
 import OffersList from '../../components/offers-list/offers-list';
 import Rating from '../../components/rating/rating';
 import { useAppSelector, useAppDispatch } from '../../hooks';
-import NotFoundPage from '../not-found-page/not-found-page';
-import { AppRoute } from '../../const';
-import HeaderNavLogged from '../../components/header-nav-logged/header-nav-logged';
-import HeaderNavNotLogged from '../../components/header-nav-not-logged/header-nav-not-logged';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchRoomDataAction } from '../../store/api-actions';
+import Header from '../../components/header/header';
+import PlaceCardMark from '../../components/place-card-mark/place-card-mark';
+import Bookmark from '../../components/bookmark/bookmark';
+import LoadingScreen from '../../components/loading-screen/loading-screen';
+import { LocationOffer } from '../../types/offers';
+import { getRoomSelector } from '../../store/selectors/room-selector';
+import { getOffersNearbySelector } from '../../store/selectors/offers-nearby-selector';
+import NotFoundPage from '../not-found-page/not-found-page';
+
+type Point = {
+  id: number;
+  location: LocationOffer;
+}
 
 function RoomPage(): JSX.Element {
   const dispatch = useAppDispatch();
-  const param = useParams().id;
+  const param = useParams();
+
+  const [isDataLoading, setIsDataLoading] = useState(false);
+
+  const featchData = async () => {
+    if (!param.id) {
+      return;
+    }
+
+    await dispatch(fetchRoomDataAction(param.id));
+    setIsDataLoading(true);
+  };
 
   useEffect(() => {
-    if (param) {
-      dispatch(fetchRoomDataAction(param));
-    }
-  }, [dispatch, param]);
+    featchData();
+  }, [param.id]);
 
-  const { room, offersNearby, authorizationStatus } = useAppSelector((state) => ({
-    room: state.room,
-    offersNearby: state.offersNearby,
-    authorizationStatus: state.authorizationStatus,
-  }));
+  const room = useAppSelector(getRoomSelector);
+  const offersNearby = useAppSelector(getOffersNearbySelector);
+
+  if (!isDataLoading) {
+    return <LoadingScreen />;
+  }
 
   if (!room) {
     return <NotFoundPage />;
   }
 
-  const isAuthorisedUser = authorizationStatus === 'authorized';
 
   const cityLocation = room.city.location;
-  const points = [...offersNearby, room].map(({ id, location }) => ({ id, location }));
+  const points: Point[] = [...offersNearby, room].map(({ id, location }) => ({ id, location }));
 
   const {
-    id, isFavorite ,images, title, rating, isPremium, type, bedrooms, maxAdults, price, goods, description, host,
+    id, isFavorite, images, title, rating, isPremium, type, bedrooms, maxAdults, price, goods, description, host,
   } = room;
 
   const proActiveClass: string = host.isPro ? 'property__avatar-wrapper--pro' : '';
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link to={AppRoute.Root}>
-                <a className="header__logo-link" href="#main">
-                  <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-                </a>
-              </Link>
-            </div>
-            {isAuthorisedUser ? <HeaderNavLogged /> : <HeaderNavNotLogged />}
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="page__main page__main--property">
         <section className="property">
           {images && (
             <div className="property__gallery-container container">
               <div className="property__gallery">
-                {images?.map((item) => (
+                {images?.map((item: string) => (
                   <div key={item} className="property__image-wrapper">
                     <img className="property__image" src={item} alt="Place room" />
                   </div>
@@ -76,21 +81,12 @@ function RoomPage(): JSX.Element {
           )}
           <div className="property__container container">
             <div className="property__wrapper">
-              {isPremium && (
-                <div className="property__mark">
-                  <span>Premium</span>
-                </div>
-              )}
+              {isPremium && <PlaceCardMark type="room" />}
               <div className="property__name-wrapper">
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className={`property__bookmark-button ${isFavorite ? 'property__bookmark-button--active' : ''} button`} type="button">
-                  <svg className="property__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"></use>
-                  </svg>
-                  <span className="visually-hidden">{isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
-                </button>
+                <Bookmark hotelId={id} isFavorite={isFavorite} type='room' />
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
@@ -117,7 +113,7 @@ function RoomPage(): JSX.Element {
                 <div className="property__inside">
                   <h2 className="property__inside-title">What&apos;s inside</h2>
                   <ul className="property__inside-list">
-                    {goods.map((item) => (
+                    {goods.map((item: string) => (
                       <li key={item} className="property__inside-item">
                         {item}
                       </li>
@@ -156,7 +152,7 @@ function RoomPage(): JSX.Element {
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
-            <OffersList offers={offersNearby} type='room' />
+            <OffersList offers={offersNearby} type='placeNearby' />
           </section>
         </div>
       </main>

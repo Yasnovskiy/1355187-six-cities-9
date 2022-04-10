@@ -4,39 +4,49 @@ import { useAppDispatch } from '../../hooks';
 import { errorHandle } from '../../services/error-handle';
 import { sendCommentAction } from '../../store/api-actions';
 
+const MIN_REVIEW_LENGTH = 50;
+const MAX_STARS_RATING = 5;
+
 function CommentForm(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const [review, setReview] = useState('');
   const [rating, setRating] = useState(0);
+  const [isFormLocked, setIsFormLocked] = useState(false);
 
-  const id = useParams();
+  const params = useParams();
   const ratingStars = [];
 
-  for (let value = 1; value <= 5; value++) {
+  for (let value = 1; value <= MAX_STARS_RATING; value++) {
     ratingStars.push(value);
   }
 
   const ratingStarsList = ratingStars.reverse().map((value) => <ReviewStart key={value} setRating={setRating} value={value} rating={rating} />);
 
-  const reviewLenght: boolean = review.length >= 50 && rating !== 0;
+  const reviewLenght: boolean = review.length >= MIN_REVIEW_LENGTH && rating !== 0;
 
   function cleanState() {
     setReview('');
     setRating(0);
+    setIsFormLocked(false);
   }
 
   function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
-    if (id.id) {
-      cleanState();
-      dispatch(sendCommentAction( {
-        rating: rating,
-        comment: review,
-      }, id.id, cleanState));
-    } else {
+    setIsFormLocked(true);
+    if (!params.id) {
       errorHandle({ error: new Error() });
     }
+
+    cleanState();
+    dispatch(sendCommentAction(
+      {
+        rating: rating,
+        comment: review,
+        hotelId: params.id,
+        restoreFormData: cleanState,
+      },
+    ));
   }
 
   return (
@@ -52,13 +62,13 @@ function CommentForm(): JSX.Element {
         {ratingStarsList}
       </div>
 
-      <textarea className="reviews__textarea form__textarea" id="review" onChange={(evt) => setReview(evt.target.value)} value={review} name="review" placeholder="Tell how was your stay, what you like and what can be improved"></textarea>
+      <textarea className="reviews__textarea form__textarea" id="review" onChange={(evt) => setReview(evt.target.value)} value={review} name="review" placeholder="Tell how was your stay, what you like and what can be improved" maxLength={300}></textarea>
 
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set <span className="reviews__star">rating</span> and describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled={!reviewLenght}>Submit</button>
+        <button className="reviews__submit form__submit button" type="submit" disabled={!reviewLenght || isFormLocked}>Submit</button>
       </div>
     </form>
   );
@@ -72,7 +82,7 @@ type ReviewStartProps = {
 
 const labelTitleArray: string[] = ['terribly', 'badly', 'not bad', 'good', 'perfect'];
 
-function ReviewStart({ value, rating, setRating}: ReviewStartProps): JSX.Element {
+function ReviewStart({ value, rating, setRating }: ReviewStartProps): JSX.Element {
 
   return (
     <>

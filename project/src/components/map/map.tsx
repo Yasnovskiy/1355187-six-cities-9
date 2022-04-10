@@ -1,9 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { Icon, Marker } from 'leaflet';
 
-import { Pins } from '../../const';
 import { LocationOffer, Point } from '../../types/offers';
 import useMap from '../../hooks/useMap';
+
+enum Pins {
+  Default = 'pin.svg',
+  Active = 'pin-active.svg',
+}
 
 const defaultCustomIcon = new Icon({
   iconUrl: `img/${Pins.Default}`,
