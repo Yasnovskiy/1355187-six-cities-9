@@ -28,7 +28,6 @@ function CommentForm(): JSX.Element {
   function cleanState() {
     setReview('');
     setRating(0);
-    setIsFormLocked(false);
   }
 
   function handleSubmit(e: SyntheticEvent) {
@@ -38,15 +37,16 @@ function CommentForm(): JSX.Element {
       errorHandle({ error: new Error() });
     }
 
-    cleanState();
     dispatch(sendCommentAction(
       {
         rating: rating,
         comment: review,
         hotelId: params.id,
-        restoreFormData: cleanState,
+        restoreFormData: () => cleanState(),
+        setIsFormLocked: () => setIsFormLocked(false),
       },
     ));
+
   }
 
   return (

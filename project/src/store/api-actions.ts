@@ -186,9 +186,9 @@ export const finishAuthAction = createAsyncThunk(
 
 export const sendCommentAction = createAsyncThunk(
   `${ReducersName.favorites}/changeOfferFavoriteStatus`,
-  async ({ rating, comment, hotelId, restoreFormData }: SendCommentAction, thunkAPI) => {
-
+  async ({ rating, comment, hotelId, restoreFormData, setIsFormLocked }: SendCommentAction, thunkAPI) => {
     const api = thunkAPI.extra as AxiosInstance;
+
     try {
 
       const { data } = await toast.promise(api.post(`${APIRoute.Comments}/${hotelId}`, { rating, comment }),
@@ -197,10 +197,12 @@ export const sendCommentAction = createAsyncThunk(
         });
 
       thunkAPI.dispatch(setComments(data));
+      restoreFormData();
+      setIsFormLocked();
 
     } catch (error) {
       errorHandle(error);
-      restoreFormData({ rating, comment });
+      setIsFormLocked();
     }
   },
 );

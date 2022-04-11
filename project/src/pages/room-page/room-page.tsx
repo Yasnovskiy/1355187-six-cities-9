@@ -34,6 +34,8 @@ function RoomPage(): JSX.Element {
     }
 
     await dispatch(fetchRoomDataAction(param.id));
+    window.scrollTo(0, 0);
+
     setIsDataLoading(true);
   };
 
@@ -60,6 +62,7 @@ function RoomPage(): JSX.Element {
     id, isFavorite, images, title, rating, isPremium, type, bedrooms, maxAdults, price, goods, description, host,
   } = room;
 
+  const limitedArrayImages = images.slice(0, 6);
   const proActiveClass: string = host.isPro ? 'property__avatar-wrapper--pro' : '';
 
   return (
@@ -68,10 +71,10 @@ function RoomPage(): JSX.Element {
 
       <main className="page__main page__main--property">
         <section className="property">
-          {images && (
+          {limitedArrayImages && (
             <div className="property__gallery-container container">
               <div className="property__gallery">
-                {images?.map((item: string) => (
+                {limitedArrayImages?.map((item: string) => (
                   <div key={item} className="property__image-wrapper">
                     <img className="property__image" src={item} alt="Place room" />
                   </div>
