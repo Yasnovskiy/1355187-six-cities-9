@@ -52,7 +52,7 @@ const useMapAdapter = (options: Omit<MapProps, 'type'>) => {
         });
         marker
           .setIcon(
-            selectedPoint !== undefined && point.id === selectedPoint
+            selectedPoint !== null && point.id === selectedPoint
               ? currentCustomIcon
               : defaultCustomIcon,
           )

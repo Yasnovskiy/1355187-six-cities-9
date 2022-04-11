@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
 
 
-import { AppRoute } from '../../const';
+import { AppRoute, Authorization } from '../../const';
 import { useAppSelector, useAppDispatch } from '../../hooks';
 
 import { changeOfferStatusAction } from '../../store/api-actions';
@@ -13,6 +13,8 @@ function Bookmark(props: { hotelId: number, isFavorite: boolean, type: PlaceCard
   const dispatch = useAppDispatch();
 
   const authorizationStatus = useAppSelector(getAuthorizationStatusSelector);
+  const isAuth = authorizationStatus === Authorization.Authorized;
+
 
   const { hotelId, isFavorite, type } = props;
 
@@ -31,8 +33,8 @@ function Bookmark(props: { hotelId: number, isFavorite: boolean, type: PlaceCard
   }
 
   const buttonClassName = clsx('button', {
-    'place-card__bookmark-button--active button': isFavorite && !isTypeRoom,
-    'property__bookmark-button--active button': isFavorite && isTypeRoom,
+    'place-card__bookmark-button--active button': isFavorite && !isTypeRoom && isAuth,
+    'property__bookmark-button--active button': isFavorite && isTypeRoom && isAuth,
     'place-card__bookmark-button': !isTypeRoom,
     'property__bookmark-button': isTypeRoom,
   });

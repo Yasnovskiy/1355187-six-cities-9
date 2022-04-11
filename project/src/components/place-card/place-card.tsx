@@ -23,7 +23,7 @@ function PlaceCard(props: PlaceCardProps): JSX.Element {
 
   const { mouseOverHandler } = props;
 
-  const handleMouseOver = (idU: number) => {
+  const handleMouseOver = (idU: number | null) => {
     if (mouseOverHandler) {
       mouseOverHandler(idU);
     }
@@ -46,7 +46,11 @@ function PlaceCard(props: PlaceCardProps): JSX.Element {
   });
 
   return (
-    <article className={articleClass} onMouseOver={() => handleMouseOver(id)}>
+    <article
+      className={articleClass}
+      onMouseOver={() => handleMouseOver(id)}
+      onMouseOut = {() => handleMouseOver(null)}
+    >
       {isPremium && <PlaceCardMark type="placeCard"/>}
       <div className={imgWrapperClass}>
         <Link to='/' title='/'>

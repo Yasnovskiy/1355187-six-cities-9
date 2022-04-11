@@ -21,6 +21,18 @@ type Point = {
   id: number;
   location: LocationOffer;
 }
+const getConvertedString = (typeHousing: string) => {
+  switch (typeHousing) {
+    case 'room':
+      return 'Private Room';
+    case 'house':
+      return 'House';
+    case 'apartment':
+      return 'Apartment';
+    case 'hotel':
+      return 'Hotel';
+  }
+};
 
 function RoomPage(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -99,7 +111,7 @@ function RoomPage(): JSX.Element {
               </div>
               <ul className="property__features">
                 <li className="property__feature property__feature--entire">
-                  {type}
+                  {getConvertedString(type)}
                 </li>
                 <li className="property__feature property__feature--bedrooms">
                   {bedrooms} Bedrooms
